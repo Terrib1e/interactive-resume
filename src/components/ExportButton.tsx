@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // src/components/ExportButton.tsx
-import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Download } from 'lucide-react'
 import html2canvas from 'html2canvas'
@@ -19,9 +18,7 @@ export const ExportButton = () => {
       })
 
       const imgWidth = 210 // A4 width in mm
-      const pageHeight = 297 // A4 height in mm
       const imgHeight = (canvas.height * imgWidth) / canvas.width
-      const heightLeft = imgHeight
 
       const pdf = new jsPDF('p', 'mm')
       const position = 0
