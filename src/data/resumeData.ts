@@ -7,7 +7,12 @@ export const resumeData = {
       location: "Albany, NY 12210",
       email: "elijahclark@protonmail.com",
       phone: "+1 518 728 2461",
-      bio: "Passionate and versatile Full Stack Engineer with 10+ years of experience developing and maintaining diverse applications. Skilled in frontend and backend technologies, cloud services, and database management. Proven track record in leading projects, mentoring teams, and delivering scalable, maintainable solutions."
+      bio: "Passionate and versatile Full Stack Engineer with 10+ years of experience developing and maintaining diverse applications. Skilled in frontend and backend technologies, cloud services, and database management. Proven track record in leading projects, mentoring teams, and delivering scalable, maintainable solutions.",
+      avatar: "/api/placeholder/400/400",
+      links: {
+        github: "",
+        linkedin: ""
+      }
     },
 
     experience: [
@@ -118,5 +123,50 @@ export const resumeData = {
       "Passionate about continuous learning and solving complex problems",
       "Active contributor to open-source projects related to healthcare technology",
       "Mentor for junior developers, focusing on best practices and code quality"
-    ]
-  }
+    ],
+    projects: [
+      {
+        startDate: "2020-01-01",
+        endDate: "2021-01-01",
+        title: "Patient Management System",
+        description: "Developed a patient management system for healthcare providers to manage patient data and appointments. The system is built with a microservices architecture using Node.js, React, and PostgreSQL.",
+        period: "1 Year",
+        technologies: ["Node.js", "React", "PostgreSQL"],
+        highlights: [
+          "Implemented user authentication and authorization using OAuth 2.0",
+          "Designed and developed RESTful APIs for patient data management",
+          "Integrated with third-party APIs for appointment reminders and notifications"
+        ],
+        link: "https://example.com",
+        image: "/api/placeholder/800/400"
+      },
+      {
+        startDate: "2018-01-01",
+        endDate: "2019-01-01",
+        title: "E-commerce Platform",
+        description: "Built an e-commerce platform for small businesses to sell products online. The platform includes inventory management, order processing, and payment integration.",
+        period: "1 Year",
+        technologies: ["Angular", "Node.js", "MongoDB"],
+        highlights: [
+          "Developed a responsive frontend using Angular and Bootstrap",
+          "Implemented a RESTful API for product catalog and order processing",
+          "Integrated with Stripe for payment processing"
+        ],
+        image: "/api/placeholder/800/400"
+      },
+      {
+        startDate: "2016-01-01",
+        endDate: "2017-01-01",
+        title: "Social Networking App",
+        description: "Designed and developed a social networking app for connecting users based on common interests. The app includes features like user profiles, messaging, and news feed.",
+        period: "1 Year",
+        technologies: ["React Native", "Node.js", "MongoDB"],
+        highlights: [
+          "Implemented real-time chat functionality using WebSockets",
+          "Designed a scalable backend architecture using microservices",
+          "Optimized app performance for high user engagement"
+        ],
+        image: "/api/placeholder/800/400"
+      }
+    ],
+  };

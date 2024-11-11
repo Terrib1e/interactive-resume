@@ -49,6 +49,7 @@ export interface Profile {
   }
 
   export interface ResumeData {
+    projects: Project[];
     profile: Profile;
     experience: Experience[];
     skills: {
