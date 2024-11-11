@@ -5,10 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
+// In src/components/Resume.tsx, update the imports:
 import {
-  Github,
-  Mail,
-  MapPin,
   Briefcase,
   GraduationCap,
   Code,
@@ -16,7 +14,9 @@ import {
   Database,
   Cloud,
   BarChart,
-  Terminal
+  Terminal,
+  MapPin,
+  Mail
 } from 'lucide-react'
 import { resumeData } from '@/data/resumeData'
 import { motion } from 'framer-motion'

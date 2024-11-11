@@ -1,61 +1,49 @@
+// src/components/resume/Experience.tsx
+
 import React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import type { Experience as ExperienceType } from '@/types/resume'
+import type { Experience as ExperienceType } from '../../types/resume'
 
 interface ExperienceProps {
-  data: ExperienceType[]
+  experience: ExperienceType;
 }
 
-export const Experience: React.FC<ExperienceProps> = ({ data }) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
-  }
-
+export const Experience: React.FC<ExperienceProps> = ({ experience }) => {
   return (
-    <div className="space-y-6">
-      {data.map((experience, index) => (
-        <Card key={index} className="group hover:shadow-lg transition-shadow">
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle className="text-xl">{experience.position}</CardTitle>
-                <CardDescription className="text-base">
-                  {experience.company} • {experience.location}
-                </CardDescription>
-                <CardDescription className="text-sm">
-                  {formatDate(experience.startDate)} - {experience.current ? 'Present' : formatDate(experience.endDate)}
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
+    <Card className="mb-6">
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle className="text-xl">{experience.position}</CardTitle>
+            <CardDescription className="text-base">
+              {experience.company} {experience.location && `• ${experience.location}`}
+            </CardDescription>
+            <CardDescription className="text-sm">
+              {experience.period}
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <ul className="list-disc list-inside space-y-2">
+          {experience.achievements.map((achievement: string, i: number) => (
+            <li key={i} className="text-sm text-muted-foreground">
+              {achievement}
+            </li>
+          ))}
+        </ul>
 
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {experience.description}
-            </p>
-
-            <div className="space-y-4">
-              <ul className="list-disc list-inside space-y-2">
-                {experience.achievements.map((achievement, i) => (
-                  <li key={i} className="text-sm">
-                    {achievement}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="flex flex-wrap gap-2 pt-2">
-              {experience.technologies.map((tech, i) => (
-                <Badge key={i} variant="secondary">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+        {experience.technologies && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {experience.technologies.map((tech: string, i: number) => (
+              <Badge key={i} variant="secondary">
+                {tech}
+              </Badge>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }

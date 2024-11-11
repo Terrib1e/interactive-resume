@@ -1,75 +1,56 @@
+// src/components/resume/Skills.tsx
+
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { motion } from "framer-motion"
-import type { Skill } from '@/types/resume'
+import type { Skill } from '../../types/resume'
+import { LucideIcon } from 'lucide-react'
+import { motion } from 'framer-motion'
 
-interface SkillsProps {
-  data: Skill[]
+interface SkillCategoryProps {
+  title: string;
+  skills: Skill[];
+  icon: LucideIcon;
 }
 
-export const Skills: React.FC<SkillsProps> = ({ data }) => {
-  const technicalSkills = data.filter(skill => skill.category === 'technical')
-  const softSkills = data.filter(skill => skill.category === 'soft')
-  const languageSkills = data.filter(skill => skill.category === 'language')
-
-  const SkillBar = ({ skill }: { skill: Skill }) => (
-    <motion.div
-      className="space-y-2"
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium">{skill.name}</span>
-        <span className="text-sm text-muted-foreground">{skill.level}%</span>
-      </div>
-      <Progress value={skill.level} className="h-2" />
-    </motion.div>
-  )
-
+export const SkillCategory: React.FC<SkillCategoryProps> = ({
+  title,
+  skills,
+  icon: Icon
+}) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Technical Skills */}
-      <Card className="md:col-span-2">
-        <CardHeader>
-          <CardTitle>Technical Skills</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {technicalSkills.map((skill, index) => (
-            <SkillBar key={index} skill={skill} />
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Language Skills */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Languages</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {languageSkills.map((skill, index) => (
-            <SkillBar key={index} skill={skill} />
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Soft Skills */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Soft Skills</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {softSkills.map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-sm">
-                {skill.name}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="col-span-1">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Icon className="w-5 h-5" />
+          <CardTitle>{title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {skills.map((skill, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="space-y-1.5"
+          >
+            <div className="flex justify-between">
+              <span className="text-sm font-medium">{skill.name}</span>
+              {skill.experience ? (
+                <span className="text-sm text-muted-foreground">
+                  {skill.experience}
+                </span>
+              ) : (
+                <span className="text-sm text-muted-foreground">
+                  {skill.level}%
+                </span>
+              )}
+            </div>
+            {skill.level && <Progress value={skill.level} className="h-2" />}
+          </motion.div>
+        ))}
+      </CardContent>
+    </Card>
   )
 }
