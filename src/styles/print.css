@@ -1,65 +1,99 @@
 /* src/styles/print.css */
+
 @media print {
-    @page {
-      margin: 20mm;
-    }
-
-    body {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-
-    /* Hide interactive elements */
-    button:not([data-print="true"]),
-    .no-print {
-      display: none !important;
-    }
-
-    /* Ensure dark mode doesn't affect printing */
-    [data-theme="dark"] {
-      --background: 0 0% 100%;
-      --foreground: 222.2 84% 4.9%;
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
-      --primary: 222.2 47.4% 11.2%;
-      --primary-foreground: 210 40% 98%;
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 222.2 84% 4.9%;
-    }
-
-    /* Force page breaks between sections */
-    section {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-
-    /* Enhance readability */
-    p, li {
-      page-break-inside: avoid;
-      orphans: 3;
-      widows: 3;
-    }
-
-    /* Ensure links are readable */
-    a {
-      text-decoration: underline;
-      color: #000 !important;
-    }
-
-    /* Show link URLs */
-    a[href^="http"]:after {
-      content: " (" attr(href) ")";
-      font-size: 0.8em;
-    }
+  /* General print styling */
+  @page {
+    size: A4;
+    margin: 1.5cm;
   }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Hide UI elements not needed for printing */
+  .print-hidden,
+  button,
+  [role="button"],
+  .tabs-list,
+  nav,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure all print-only content is visible */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Resume specific adjustments */
+  .resume-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Typography adjustments for print */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1 {
+    font-size: 24pt !important;
+  }
+
+  h2 {
+    font-size: 18pt !important;
+  }
+
+  p, li {
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Ensure sections don't break across pages */
+  .section {
+    page-break-inside: avoid;
+  }
+
+  /* Adjust links to be more readable in print */
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  /* Adjust images for print */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Grid adjustments */
+  .grid {
+    display: block !important;
+  }
+
+  /* Force page breaks before major sections if needed */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  /* Ensure charts and tables print well */
+  table, figure {
+    page-break-inside: avoid;
+  }
+}

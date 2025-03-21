@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/types/index.ts
 
+import { ReactNode } from "react";
+
 export interface Profile {
+    website: string | number | readonly string[] | undefined;
+    summary: string | number | readonly string[] | undefined;
     avatar: string | undefined;
     links: any;
     name: string;
@@ -19,6 +23,10 @@ export interface Profile {
   }
 
   export interface Experience {
+    startDate: string | number | readonly string[] | undefined;
+    current: any;
+    endDate: string | number | readonly string[] | undefined;
+    description: string | number | readonly string[] | undefined;
     company: string;
     position: string;
     location?: string;
@@ -27,14 +35,19 @@ export interface Profile {
     technologies?: string[];
   }
 
-  export interface Education {
-    school: string;
+export interface Education {
+    school: ReactNode;
+    location: ReactNode;
+    period: ReactNode;
+    gpa: any;
+    achievements: boolean;
+    institution: string;
     degree: string;
-    location: string;
-    period: string;
-    achievements?: string[];
-    gpa?: number;
-  }
+    field: string;
+    startDate: string;
+    endDate: string;
+    current: boolean;
+}
 
   export interface Project {
     startDate:string;
@@ -51,7 +64,9 @@ export interface Profile {
   export interface ResumeData {
     projects: Project[];
     profile: Profile;
-    experience: Experience[];
+      experience: Experience[];
+      website: "", // Add empty website property
+      summary: "",
     skills: {
       frontend: Skill[];
       backend: Skill[];
@@ -62,4 +77,9 @@ export interface Profile {
     education: Education[];
     certifications: string[];
     additionalInfo: string[];
-  }
+}
+
+export interface ResumePreviewProps {
+    data: ResumeData;
+    template?: string;
+}

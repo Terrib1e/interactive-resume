@@ -1,995 +1,601 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// src/components/editor/ResumeEditor.tsx
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Plus, Trash2, Save } from 'lucide-react';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import type { ResumeData } from '@/types/resume';
-
-// Create a schema for form validation
-const resumeSchema = z.object({
-  profile: z.object({
-    name: z.string().min(2, 'Name must be at least 2 characters'),
-    title: z.string().min(2, 'Title must be at least 2 characters'),
-    location: z.string(),
-    email: z.string().email('Please enter a valid email address'),
-    phone: z.string(),
-    bio: z.string().min(10, 'Bio must be at least 10 characters'),
-    avatar: z.string().optional(),
-    links: z
-      .object({
-        github: z.string().optional(),
-        linkedin: z.string().optional(),
-        website: z.string().optional(),
-      })
-      .optional(),
-  }),
-  experience: z.array(
-    z.object({
-      company: z.string().min(2, 'Company name must be at least 2 characters'),
-      position: z.string().min(2, 'Position must be at least 2 characters'),
-      location: z.string().optional(),
-      period: z.string(),
-      achievements: z.array(z.string()),
-      technologies: z.array(z.string()).optional(),
-    }),
-  ),
-  skills: z.object({
-    frontend: z.array(
-      z.object({
-        name: z.string(),
-        level: z.number().min(0).max(100).optional(),
-        experience: z.string().optional(),
-      }),
-    ),
-    backend: z.array(
-      z.object({
-        name: z.string(),
-        level: z.number().min(0).max(100).optional(),
-        experience: z.string().optional(),
-      }),
-    ),
-    cloud: z
-      .array(
-        z.object({
-          name: z.string(),
-          level: z.number().min(0).max(100).optional(),
-          experience: z.string().optional(),
-        }),
-      )
-      .optional(),
-    databases: z
-      .array(
-        z.object({
-          name: z.string(),
-          level: z.number().min(0).max(100).optional(),
-          experience: z.string().optional(),
-        }),
-      )
-      .optional(),
-    analytics: z
-      .array(
-        z.object({
-          name: z.string(),
-          level: z.number().min(0).max(100).optional(),
-          experience: z.string().optional(),
-        }),
-      )
-      .optional(),
-  }),
-  education: z.array(
-    z.object({
-      school: z.string().min(2, 'School name must be at least 2 characters'),
-      degree: z.string().min(2, 'Degree must be at least 2 characters'),
-      location: z.string(),
-      period: z.string(),
-      achievements: z.array(z.string()).optional(),
-      gpa: z.number().min(0).max(4).optional(),
-    }),
-  ),
-  projects: z
-    .array(
-      z.object({
-        title: z.string().min(2, 'Project title must be at least 2 characters'),
-        description: z.string(),
-        period: z.string(),
-        startDate: z.string(),
-        endDate: z.string().optional(),
-        technologies: z.array(z.string()),
-        highlights: z.array(z.string()),
-        link: z.string().optional(),
-        image: z.string().optional(),
-      }),
-    )
-    .optional(),
-  certifications: z.array(z.string()).optional(),
-  additionalInfo: z.array(z.string()).optional(),
-});
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Plus, Trash2, Save, Eye, Pencil, Briefcase, GraduationCap, Code, FolderGit2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useLanguage } from '@/hooks/use-language';
+import type { ResumePreviewProps,ResumeData, Skill } from '@/types/resume';
+import ResumePreview from '../resume/ResumePreview';
 
 interface ResumeEditorProps {
   initialData: ResumeData;
-  onSave: (data: ResumeData) => void;
+  onSave?: (data: ResumeData) => void;
+  template?: string;
+  isSplitView?: boolean;
 }
 
-export function ResumeEditor({ initialData, onSave }: ResumeEditorProps) {
-  const form = useForm<z.infer<typeof resumeSchema>>({
-    resolver: zodResolver(resumeSchema),
-    defaultValues: initialData,
-  });
 
-  // Experience field array
-  const {
-    fields: experienceFields,
-    append: appendExperience,
-    remove: removeExperience,
-  } = useFieldArray({
-    control: form.control,
-    name: 'experience',
-  });
+export function ResumeEditor({ initialData, onSave, template = 'modern', isSplitView = false }: ResumeEditorProps) {
+  const [resumeData, setResumeData] = useState<ResumeData>(initialData);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [activeSection, setActiveSection] = useState('profile');
 
-  // Education field array
-  const {
-    fields: educationFields,
-    append: appendEducation,
-    remove: removeEducation,
-  } = useFieldArray({
-    control: form.control,
-    name: 'education',
-  });
+  const debouncedResumeData = useDebounce(resumeData, 500);
+  const { toast } = useToast();
+  const { t } = useLanguage();
 
-  // Projects field array
-  const {
-    fields: projectFields,
-    append: appendProject,
-    remove: removeProject,
-  } = useFieldArray({
-    control: form.control,
-    name: 'projects',
-  });
+  // Auto-save effect that would connect to a backend in a real application
+  useEffect(() => {
+    // This would be an API call in a real application
+    console.log('Auto-saving resume data:', debouncedResumeData);
 
-  // Skills field arrays
-  const { fields: frontendSkillFields, append: appendFrontendSkill, remove: removeFrontendSkill } = useFieldArray({ control: form.control, name: 'skills.frontend' });
+    // Simulated successful autosave
+    const autosaveTimeout = setTimeout(() => {
+      // This is where you'd handle the response from your API
+      console.log('Resume data auto-saved');
+    }, 1000);
 
-  const { fields: backendSkillFields, append: appendBackendSkill, remove: removeBackendSkill } = useFieldArray({ control: form.control, name: 'skills.backend' });
+    return () => clearTimeout(autosaveTimeout);
+  }, [debouncedResumeData]);
 
-  function onSubmit(values: z.infer<typeof resumeSchema>) {
-    onSave(values as ResumeData);
-  }
+  // Handle profile data changes
+  const handleProfileChange = (field: keyof typeof resumeData.profile, value: string) => {
+    setResumeData({
+      ...resumeData,
+      profile: {
+        ...resumeData.profile,
+        [field]: value,
+      },
+    });
+  };
 
-  function appendAchievement(experienceIndex: number, value: string = '') {
-    const achievements = form.getValues(`experience.${experienceIndex}.achievements`) || [];
-    form.setValue(`experience.${experienceIndex}.achievements`, [...achievements, value]);
-  }
+  // Handle experience changes
+  const handleExperienceChange = (index: number, field: keyof (typeof resumeData.experience)[0], value: string) => {
+    const updatedExperiences = [...resumeData.experience];
+    updatedExperiences[index] = {
+      ...updatedExperiences[index],
+      [field]: value,
+    };
 
-  function removeAchievement(experienceIndex: number, achievementIndex: number) {
-    const achievements = form.getValues(`experience.${experienceIndex}.achievements`) || [];
-    form.setValue(
-      `experience.${experienceIndex}.achievements`,
-      achievements.filter((_, i) => i !== achievementIndex),
-    );
-  }
+    setResumeData({
+      ...resumeData,
+      experience: updatedExperiences,
+    });
+  };
 
-  function appendTechnology(experienceIndex: number, value: string = '') {
-    const technologies = form.getValues(`experience.${experienceIndex}.technologies`) || [];
-    form.setValue(`experience.${experienceIndex}.technologies`, [...technologies, value]);
-  }
+  // Add new experience
+  const addExperience = () => {
+    setResumeData({
+      ...resumeData,
+      experience: [
+        ...resumeData.experience,
+        {
+          company: 'New Company',
+          position: 'Position',
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: '',
+          description: 'Describe your role and achievements',
+          location: 'City, Country',
+          current: true,
+        } as unknown as (typeof resumeData.experience)[0],
+      ],
+    });
 
-  function removeTechnology(experienceIndex: number, techIndex: number) {
-    const technologies = form.getValues(`experience.${experienceIndex}.technologies`) || [];
-    form.setValue(
-      `experience.${experienceIndex}.technologies`,
-      technologies.filter((_, i) => i !== techIndex),
-    );
-  }
+    toast({
+      title: 'Experience Added',
+      description: 'A new experience entry has been added.',
+    });
+  };
 
-  function appendProjectHighlight(projectIndex: number, value: string = '') {
-    const highlights = form.getValues(`projects.${projectIndex}.highlights`) || [];
-    form.setValue(`projects.${projectIndex}.highlights`, [...highlights, value]);
-  }
+  // Remove experience
+  const removeExperience = (index: number) => {
+    const updatedExperiences = [...resumeData.experience];
+    updatedExperiences.splice(index, 1);
 
-  function removeProjectHighlight(projectIndex: number, highlightIndex: number) {
-    const highlights = form.getValues(`projects.${projectIndex}.highlights`) || [];
-    form.setValue(
-      `projects.${projectIndex}.highlights`,
-      highlights.filter((_, i) => i !== highlightIndex),
-    );
-  }
+    setResumeData({
+      ...resumeData,
+      experience: updatedExperiences,
+    });
 
-  function appendProjectTechnology(projectIndex: number, value: string = '') {
-    const technologies = form.getValues(`projects.${projectIndex}.technologies`) || [];
-    form.setValue(`projects.${projectIndex}.technologies`, [...technologies, value]);
-  }
+    toast({
+      title: 'Experience Removed',
+      description: 'The experience entry has been removed.',
+    });
+  };
 
-  function removeProjectTechnology(projectIndex: number, techIndex: number) {
-    const technologies = form.getValues(`projects.${projectIndex}.technologies`) || [];
-    form.setValue(
-      `projects.${projectIndex}.technologies`,
-      technologies.filter((_, i) => i !== techIndex),
-    );
-  }
+  // Handle education changes
+  const handleEducationChange = (index: number, field: keyof (typeof resumeData.education)[0], value: string) => {
+    const updatedEducation = [...resumeData.education];
+    updatedEducation[index] = {
+      ...updatedEducation[index],
+      [field]: value,
+    };
+
+    setResumeData({
+      ...resumeData,
+      education: updatedEducation,
+    });
+  };
+
+  // Add new education
+  const addEducation = () => {
+    setResumeData({
+      ...resumeData,
+      education: [
+        ...resumeData.education,
+        {
+          institution: 'New Institution',
+          degree: 'Degree',
+          field: 'Field of Study',
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: '',
+          current: true,
+          school: 'New Institution', // Required by Education type
+          location: 'City, Country', // Required by Education type
+          period: 'Present', // Required by Education type
+          gpa: '', // Required by Education type
+          achievements: false // Required by Education type
+        },
+      ],
+    });
+
+    toast({
+      title: 'Education Added',
+      description: 'A new education entry has been added.',
+    });
+  };
+
+  // Remove education
+  const removeEducation = (index: number) => {
+    const updatedEducation = [...resumeData.education];
+    updatedEducation.splice(index, 1);
+
+    setResumeData({
+      ...resumeData,
+      education: updatedEducation,
+    });
+
+    toast({
+      title: 'Education Removed',
+      description: 'The education entry has been removed.',
+    });
+  };
+
+  // Handle skills changes
+  const handleSkillChange = (category: keyof typeof resumeData.skills, index: number, value: string) => {
+    const updatedSkills = { ...resumeData.skills };
+    updatedSkills[category][index] = { name: value } as Skill;
+
+    setResumeData({
+      ...resumeData,
+      skills: updatedSkills,
+    });
+  };
+
+  // Add new skill
+  const addSkill = (category: keyof typeof resumeData.skills) => {
+    setResumeData({
+      ...resumeData,
+      skills: {
+        ...resumeData.skills,
+        [category]: [...resumeData.skills[category], 'New Skill'],
+      },
+    });
+
+    toast({
+      title: 'Skill Added',
+      description: `A new skill has been added to ${category}.`,
+    });
+  };
+
+  // Remove skill
+  const removeSkill = (category: keyof typeof resumeData.skills, index: number) => {
+    const updatedSkills = { ...resumeData.skills };
+    updatedSkills[category] = updatedSkills[category].filter((_, i) => i !== index);
+
+    setResumeData({
+      ...resumeData,
+      skills: updatedSkills,
+    });
+
+    toast({
+      title: 'Skill Removed',
+      description: `The skill has been removed from ${category}.`,
+    });
+  };
+
+  // Handle projects changes
+  const handleProjectChange = (index: number, field: keyof (typeof resumeData.projects)[0], value: string) => {
+    if (!resumeData.projects) return;
+
+    const updatedProjects = [...resumeData.projects];
+    updatedProjects[index] = {
+      ...updatedProjects[index],
+      [field]: value,
+    };
+
+    setResumeData({
+      ...resumeData,
+      projects: updatedProjects,
+    });
+  };
+
+  // Add new project
+  const addProject = () => {
+    setResumeData({
+      ...resumeData,
+      projects: [
+        ...(resumeData.projects || []),
+        {
+          title: 'New Project',
+          description: 'Project description',
+          link: '',
+          technologies: ['Technology 1', 'Technology 2'],
+          image: '',
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: '',
+          period: '',
+          highlights: [],
+        },
+      ],
+    });
+
+    toast({
+      title: 'Project Added',
+      description: 'A new project has been added.',
+    });
+  };
+
+  // Remove project
+  const removeProject = (index: number) => {
+    if (!resumeData.projects) return;
+
+    const updatedProjects = [...resumeData.projects];
+    updatedProjects.splice(index, 1);
+
+    setResumeData({
+      ...resumeData,
+      projects: updatedProjects,
+    });
+
+    toast({
+      title: 'Project Removed',
+      description: 'The project has been removed.',
+    });
+  };
+
+  // Save all changes
+  const saveAllChanges = () => {
+    if (onSave) {
+      onSave(resumeData);
+    }
+
+    // This would be an API call in a real application
+    localStorage.setItem('resume_data', JSON.stringify(resumeData));
+
+    toast({
+      title: 'Resume Saved',
+      description: 'All your changes have been saved successfully.',
+    });
+  };
+
+  // Toggle preview mode
+  const togglePreviewMode = () => {
+    setIsPreviewMode(!isPreviewMode);
+  };
 
   return (
-    <div className="container max-w-4xl mx-auto p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Resume</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <Accordion type="single" collapsible defaultValue="profile">
+    <div className="container mx-auto py-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">
+          {t('resume')} {isPreviewMode ? t('preview') : t('editor')}
+        </h1>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={togglePreviewMode} className="flex items-center gap-1">
+            {isPreviewMode ? (
+              <>
+                <Pencil className="h-4 w-4" />
+                <span>{t('edit')}</span>
+              </>
+            ) : (
+              <>
+                <Eye className="h-4 w-4" />
+                <span>{t('preview')}</span>
+              </>
+            )}
+          </Button>
+          <Button variant="default" size="sm" onClick={saveAllChanges} className="flex items-center gap-1">
+            <Save className="h-4 w-4" />
+            <span>{t('save')}</span>
+          </Button>
+        </div>
+      </div>
+
+      {isPreviewMode ? (
+              <ResumePreview data={resumeData}
+                template={template}
+                onEdit={() => {
+                  setIsPreviewMode(false);
+                }}
+                isSplitView={isSplitView}
+              />
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('resumeEditor')}</CardTitle>
+            <CardDescription>{t('editResumeDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue={activeSection} onValueChange={setActiveSection}>
+              <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-6">
+                <TabsTrigger value="profile" className="flex items-center gap-1">
+                  <Pencil className="h-4 w-4" /> {t('profile')}
+                </TabsTrigger>
+                <TabsTrigger value="experience" className="flex items-center gap-1">
+                  <Briefcase className="h-4 w-4" /> {t('experience')}
+                </TabsTrigger>
+                <TabsTrigger value="education" className="flex items-center gap-1">
+                  <GraduationCap className="h-4 w-4" /> {t('education')}
+                </TabsTrigger>
+                <TabsTrigger value="skills" className="flex items-center gap-1">
+                  <Code className="h-4 w-4" /> {t('skills')}
+                </TabsTrigger>
+                <TabsTrigger value="projects" className="flex items-center gap-1">
+                  <FolderGit2 className="h-4 w-4" /> {t('projects')}
+                </TabsTrigger>
+              </TabsList>
+
+              <ScrollArea className="h-[calc(100vh-300px)] pr-4">
                 {/* Profile Section */}
-                <AccordionItem value="profile">
-                  <AccordionTrigger>Profile Information</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="profile.name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Full Name</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="profile.title"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Title</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="profile.email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input type="email" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="profile.phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Phone</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="profile.location"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Location</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="profile.avatar"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Avatar URL</FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                <TabsContent value="profile" className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">{t('name')}</Label>
+                      <Input id="name" value={resumeData.profile.name} onChange={(e) => handleProfileChange('name', e.target.value)} />
                     </div>
-
-                    <div className="mt-4">
-                      <h4 className="text-sm font-medium mb-2">Social Links</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="profile.links.github"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>GitHub</FormLabel>
-                              <FormControl>
-                                <Input placeholder="github.com/username" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="profile.links.linkedin"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>LinkedIn</FormLabel>
-                              <FormControl>
-                                <Input placeholder="linkedin.com/in/username" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="profile.links.website"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Website</FormLabel>
-                              <FormControl>
-                                <Input placeholder="example.com" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="title">{t('title')}</Label>
+                      <Input id="title" value={resumeData.profile.title} onChange={(e) => handleProfileChange('title', e.target.value)} />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">{t('email')}</Label>
+                      <Input id="email" type="email" value={resumeData.profile.email} onChange={(e) => handleProfileChange('email', e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">{t('phone')}</Label>
+                      <Input id="phone" value={resumeData.profile.phone} onChange={(e) => handleProfileChange('phone', e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="location">{t('location')}</Label>
+                      <Input id="location" value={resumeData.profile.location} onChange={(e) => handleProfileChange('location', e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="website">{t('website')}</Label>
+                      <Input id="website" value={resumeData.profile.website} onChange={(e) => handleProfileChange('website', e.target.value)} />
+                    </div>
+                  </div>
 
-                    <FormField
-                      control={form.control}
-                      name="profile.bio"
-                      render={({ field }) => (
-                        <FormItem className="mt-4">
-                          <FormLabel>Bio</FormLabel>
-                          <FormControl>
-                            <Textarea className="min-h-[120px]" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </AccordionContent>
-                </AccordionItem>
+                  <div className="space-y-2">
+                    <Label htmlFor="summary">{t('summary')}</Label>
+                    <Textarea id="summary" rows={4} value={resumeData.profile.summary} onChange={(e) => handleProfileChange('summary', e.target.value)} />
+                  </div>
+                </TabsContent>
 
                 {/* Experience Section */}
-                <AccordionItem value="experience">
-                  <AccordionTrigger>Experience</AccordionTrigger>
-                  <AccordionContent>
-                    {experienceFields.map((field, index) => (
-                      <div key={field.id} className="mb-6 p-4 border rounded-lg">
-                        <div className="flex justify-between items-center mb-4">
-                          <h4 className="font-semibold">Experience {index + 1}</h4>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="destructive" size="sm">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                <AlertDialogDescription>This action cannot be undone. This will permanently delete this experience entry.</AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => removeExperience(index)}>Delete</AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                <TabsContent value="experience" className="space-y-4">
+                  {resumeData.experience.map((exp, index) => (
+                    <Card key={index} className="border border-border">
+                      <CardHeader className="py-3">
+                        <div className="flex justify-between items-center">
+                          <CardTitle className="text-lg">{exp.company}</CardTitle>
+                          <Button variant="destructive" size="sm" onClick={() => removeExperience(index)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
+                      </CardHeader>
+                      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`company-${index}`}>{t('company')}</Label>
+                          <Input id={`company-${index}`} value={exp.company} onChange={(e) => handleExperienceChange(index, 'company', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`position-${index}`}>{t('position')}</Label>
+                          <Input id={`position-${index}`} value={exp.position} onChange={(e) => handleExperienceChange(index, 'position', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`location-${index}`}>{t('location')}</Label>
+                          <Input id={`location-${index}`} value={exp.location} onChange={(e) => handleExperienceChange(index, 'location', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`startDate-${index}`}>{t('startDate')}</Label>
+                          <Input id={`startDate-${index}`} type="date" value={exp.startDate} onChange={(e) => handleExperienceChange(index, 'startDate', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`endDate-${index}`}>
+                            {t('endDate')}
+                            {exp.current && <span className="ml-2 text-sm text-muted-foreground">({t('current')})</span>}
+                          </Label>
+                          <Input id={`endDate-${index}`} type="date" value={exp.endDate} disabled={exp.current} onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value)} />
+                        </div>
+                        <div className="space-y-2 flex items-center">
+                          <Label htmlFor={`current-${index}`} className="flex items-center space-x-2">
+                            <input
+                              id={`current-${index}`}
+                              type="checkbox"
+                              checked={exp.current}
+                              onChange={(e) => handleExperienceChange(index, 'current', e.target.checked.toString())}
+                              className="form-checkbox"
+                            />
+                            <span>{t('currentPosition')}</span>
+                          </Label>
+                        </div>
+                        <div className="space-y-2 col-span-2">
+                          <Label htmlFor={`description-${index}`}>{t('description')}</Label>
+                          <Textarea id={`description-${index}`} rows={4} value={exp.description} onChange={(e) => handleExperienceChange(index, 'description', e.target.value)} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name={`experience.${index}.company`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Company</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`experience.${index}.position`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Position</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`experience.${index}.location`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Location</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`experience.${index}.period`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Period</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Jan 2020 to Present" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-
-                        {/* Achievements */}
-                        <div className="mt-4">
-                          <FormLabel>Achievements</FormLabel>
-                          <div className="space-y-2">
-                            {form.watch(`experience.${index}.achievements`)?.map((_, achievementIndex) => (
-                              <div key={achievementIndex} className="flex items-center gap-2">
-                                <FormField
-                                  control={form.control}
-                                  name={`experience.${index}.achievements.${achievementIndex}`}
-                                  render={({ field }) => (
-                                    <FormItem className="flex-1">
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                    </FormItem>
-                                  )}
-                                />
-                                <Button type="button" variant="destructive" size="sm" onClick={() => removeAchievement(index, achievementIndex)}>
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            ))}
-                            <Button type="button" variant="outline" size="sm" onClick={() => appendAchievement(index)}>
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Achievement
-                            </Button>
-                          </div>
-                        </div>
-
-                        {/* Technologies */}
-                        <div className="mt-4">
-                          <FormLabel>Technologies</FormLabel>
-                          <div className="space-y-2">
-                            {form.watch(`experience.${index}.technologies`)?.map((_, techIndex) => (
-                              <div key={techIndex} className="flex items-center gap-2">
-                                <FormField
-                                  control={form.control}
-                                  name={`experience.${index}.technologies.${techIndex}`}
-                                  render={({ field }) => (
-                                    <FormItem className="flex-1">
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                    </FormItem>
-                                  )}
-                                />
-                                <Button type="button" variant="destructive" size="sm" onClick={() => removeTechnology(index, techIndex)}>
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            ))}
-                            <Button type="button" variant="outline" size="sm" onClick={() => appendTechnology(index)}>
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Technology
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() =>
-                        appendExperience({
-                          company: '',
-                          position: '',
-                          location: '',
-                          period: '',
-                          achievements: [],
-                          technologies: [],
-                        })
-                      }
-                      className="mt-4"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Experience
-                    </Button>
-                  </AccordionContent>
-                </AccordionItem>
+                  <Button onClick={addExperience} className="w-full">
+                    <Plus className="mr-2 h-4 w-4" /> {t('addExperience')}
+                  </Button>
+                </TabsContent>
 
                 {/* Education Section */}
-                <AccordionItem value="education">
-                  <AccordionTrigger>Education</AccordionTrigger>
-                  <AccordionContent>
-                    {educationFields.map((field, index) => (
-                      <div key={field.id} className="mb-6 p-4 border rounded-lg">
-                        <div className="flex justify-between items-center mb-4">
-                          <h4 className="font-semibold">Education {index + 1}</h4>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="destructive" size="sm">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                <AlertDialogDescription>This action cannot be undone. This will permanently delete this education entry.</AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => removeEducation(index)}>Delete</AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                <TabsContent value="education" className="space-y-4">
+                  {resumeData.education.map((edu, index) => (
+                    <Card key={index} className="border border-border">
+                      <CardHeader className="py-3">
+                        <div className="flex justify-between items-center">
+                          <CardTitle className="text-lg">{edu.institution}</CardTitle>
+                          <Button variant="destructive" size="sm" onClick={() => removeEducation(index)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
+                      </CardHeader>
+                      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`institution-${index}`}>{t('institution')}</Label>
+                          <Input id={`institution-${index}`} value={edu.institution} onChange={(e) => handleEducationChange(index, 'institution', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`degree-${index}`}>{t('degree')}</Label>
+                          <Input id={`degree-${index}`} value={edu.degree} onChange={(e) => handleEducationChange(index, 'degree', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`field-${index}`}>{t('field')}</Label>
+                          <Input id={`field-${index}`} value={edu.field} onChange={(e) => handleEducationChange(index, 'field', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`startDate-edu-${index}`}>{t('startDate')}</Label>
+                          <Input id={`startDate-edu-${index}`} type="date" value={edu.startDate} onChange={(e) => handleEducationChange(index, 'startDate', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`endDate-edu-${index}`}>
+                            {t('endDate')}
+                            {edu.current && <span className="ml-2 text-sm text-muted-foreground">({t('current')})</span>}
+                          </Label>
+                          <Input id={`endDate-edu-${index}`} type="date" value={edu.endDate} disabled={edu.current} onChange={(e) => handleEducationChange(index, 'endDate', e.target.value)} />
+                        </div>
+                        <div className="space-y-2 flex items-center">
+                          <Label htmlFor={`current-edu-${index}`} className="flex items-center space-x-2">
+                            <input
+                              id={`current-edu-${index}`}
+                              type="checkbox"
+                              checked={edu.current}
+                              onChange={(e) => handleEducationChange(index, 'current', e.target.checked.toString())}
+                              className="form-checkbox"
+                            />
+                            <span>{t('currentlyStudying')}</span>
+                          </Label>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name={`education.${index}.school`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>School</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`education.${index}.degree`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Degree</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`education.${index}.location`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Location</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`education.${index}.period`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Period</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Aug 2015 to Jun 2019" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() =>
-                        appendEducation({
-                          school: '',
-                          degree: '',
-                          location: '',
-                          period: '',
-                        })
-                      }
-                      className="mt-4"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Education
-                    </Button>
-                  </AccordionContent>
-                </AccordionItem>
+                  <Button onClick={addEducation} className="w-full">
+                    <Plus className="mr-2 h-4 w-4" /> {t('addEducation')}
+                  </Button>
+                </TabsContent>
 
                 {/* Skills Section */}
-                <AccordionItem value="skills">
-                  <AccordionTrigger>Skills</AccordionTrigger>
-                  <AccordionContent>
-                    {/* Frontend Skills */}
-                    <div className="mb-6">
-                      <h4 className="font-semibold mb-2">Frontend Skills</h4>
-                      {frontendSkillFields.map((field, index) => (
-                        <div key={field.id} className="flex items-center gap-2 mb-2">
-                          <FormField
-                            control={form.control}
-                            name={`skills.frontend.${index}.name`}
-                            render={({ field }) => (
-                              <FormItem className="flex-1">
-                                <FormControl>
-                                  <Input placeholder="Skill name" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`skills.frontend.${index}.level`}
-                            render={({ field }) => (
-                              <FormItem className="w-20">
-                                <FormControl>
-                                  <Input type="number" placeholder="Level" min={0} max={100} {...field} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`skills.frontend.${index}.experience`}
-                            render={({ field }) => (
-                              <FormItem className="w-32">
-                                <FormControl>
-                                  <Input placeholder="Experience" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <Button type="button" variant="destructive" size="sm" onClick={() => removeFrontendSkill(index)}>
-                            <Trash2 className="w-4 h-4" />
+                <TabsContent value="skills" className="space-y-6">
+                  {/* Frontend Skills */}
+                  <Card className="border border-border">
+                    <CardHeader className="py-3">
+                      <CardTitle>Frontend Skills</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {resumeData.skills.frontend.map((skill, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Input value={skill.name} onChange={(e) => handleSkillChange('frontend', index, e.target.value)} />
+                          <Button variant="destructive" size="sm" onClick={() => removeSkill('frontend', index)}>
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       ))}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          appendFrontendSkill({
-                            name: '',
-                            level: 80,
-                            experience: '',
-                          })
-                        }
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Frontend Skill
+                      <Button onClick={() => addSkill('frontend')} variant="outline" className="w-full">
+                        <Plus className="mr-2 h-4 w-4" /> Add Frontend Skill
                       </Button>
-                    </div>
+                    </CardContent>
+                  </Card>
 
-                    {/* Backend Skills */}
-                    <div className="mb-6">
-                      <h4 className="font-semibold mb-2">Backend Skills</h4>
-                      {backendSkillFields.map((field, index) => (
-                        <div key={field.id} className="flex items-center gap-2 mb-2">
-                          <FormField
-                            control={form.control}
-                            name={`skills.backend.${index}.name`}
-                            render={({ field }) => (
-                              <FormItem className="flex-1">
-                                <FormControl>
-                                  <Input placeholder="Skill name" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`skills.backend.${index}.level`}
-                            render={({ field }) => (
-                              <FormItem className="w-20">
-                                <FormControl>
-                                  <Input type="number" placeholder="Level" min={0} max={100} {...field} onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`skills.backend.${index}.experience`}
-                            render={({ field }) => (
-                              <FormItem className="w-32">
-                                <FormControl>
-                                  <Input placeholder="Experience" {...field} />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          <Button type="button" variant="destructive" size="sm" onClick={() => removeBackendSkill(index)}>
-                            <Trash2 className="w-4 h-4" />
+                  {/* Backend Skills */}
+                  <Card className="border border-border">
+                    <CardHeader className="py-3">
+                      <CardTitle>Backend Skills</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {resumeData.skills.backend.map((skill, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <Input value={skill.name} onChange={(e) => handleSkillChange('backend', index, e.target.value)} />
+                          <Button variant="destructive" size="sm" onClick={() => removeSkill('backend', index)}>
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       ))}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          appendBackendSkill({
-                            name: '',
-                            level: 80,
-                            experience: '',
-                          })
-                        }
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Backend Skill
+                      <Button onClick={() => addSkill('backend')} variant="outline" className="w-full">
+                        <Plus className="mr-2 h-4 w-4" /> Add Backend Skill
                       </Button>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
+                    </CardContent>
+                  </Card>
+
+                  {/* Other Skills (database, devops, tools, etc.) */}
+                  {/* You can add more skill categories as needed */}
+                </TabsContent>
 
                 {/* Projects Section */}
-                <AccordionItem value="projects">
-                  <AccordionTrigger>Projects</AccordionTrigger>
-                  <AccordionContent>
-                    {projectFields.map((field, index) => (
-                      <div key={field.id} className="mb-6 p-4 border rounded-lg">
-                        <div className="flex justify-between items-center mb-4">
-                          <h4 className="font-semibold">Project {index + 1}</h4>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="destructive" size="sm">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                <AlertDialogDescription>This action cannot be undone. This will permanently delete this project entry.</AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => removeProject(index)}>Delete</AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
+                <TabsContent value="projects" className="space-y-4">
+                  {resumeData.projects?.map((project, index) => (
+                    <Card key={index} className="border border-border">
+                      <CardHeader className="py-3">
+                        <div className="flex justify-between items-center">
+                          <CardTitle className="text-lg">{project.title}</CardTitle>
+                          <Button variant="destructive" size="sm" onClick={() => removeProject(index)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name={`projects.${index}.title`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Title</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`projects.${index}.period`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Period</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="1 Year" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`projects.${index}.startDate`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Start Date</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="2022-01-01" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`projects.${index}.endDate`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>End Date</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="2023-01-01" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`projects.${index}.link`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Project Link</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="https://example.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name={`projects.${index}.image`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Image URL</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="/images/project.jpg" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                      </CardHeader>
+                      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`project-title-${index}`}>{t('title')}</Label>
+                          <Input id={`project-title-${index}`} value={project.title} onChange={(e) => handleProjectChange(index, 'title', e.target.value)} />
                         </div>
-
-                        <FormField
-                          control={form.control}
-                          name={`projects.${index}.description`}
-                          render={({ field }) => (
-                            <FormItem className="mt-4">
-                              <FormLabel>Description</FormLabel>
-                              <FormControl>
-                                <Textarea className="min-h-[80px]" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        {/* Project Technologies */}
-                        <div className="mt-4">
-                          <FormLabel>Technologies</FormLabel>
-                          <div className="space-y-2">
-                            {form.watch(`projects.${index}.technologies`)?.map((_, techIndex) => (
-                              <div key={techIndex} className="flex items-center gap-2">
-                                <FormField
-                                  control={form.control}
-                                  name={`projects.${index}.technologies.${techIndex}`}
-                                  render={({ field }) => (
-                                    <FormItem className="flex-1">
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                    </FormItem>
-                                  )}
-                                />
-                                <Button type="button" variant="destructive" size="sm" onClick={() => removeProjectTechnology(index, techIndex)}>
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            ))}
-                            <Button type="button" variant="outline" size="sm" onClick={() => appendProjectTechnology(index)}>
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Technology
-                            </Button>
-                          </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`project-link-${index}`}>{t('link')}</Label>
+                          <Input id={`project-link-${index}`} value={project.link} onChange={(e) => handleProjectChange(index, 'link', e.target.value)} />
                         </div>
-
-                        {/* Project Highlights */}
-                        <div className="mt-4">
-                          <FormLabel>Highlights</FormLabel>
-                          <div className="space-y-2">
-                            {form.watch(`projects.${index}.highlights`)?.map((_, highlightIndex) => (
-                              <div key={highlightIndex} className="flex items-center gap-2">
-                                <FormField
-                                  control={form.control}
-                                  name={`projects.${index}.highlights.${highlightIndex}`}
-                                  render={({ field }) => (
-                                    <FormItem className="flex-1">
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                    </FormItem>
-                                  )}
-                                />
-                                <Button type="button" variant="destructive" size="sm" onClick={() => removeProjectHighlight(index, highlightIndex)}>
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            ))}
-                            <Button type="button" variant="outline" size="sm" onClick={() => appendProjectHighlight(index)}>
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Highlight
-                            </Button>
-                          </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`project-image-${index}`}>{t('imageUrl')}</Label>
+                          <Input id={`project-image-${index}`} value={project.image} onChange={(e) => handleProjectChange(index, 'image', e.target.value)} />
                         </div>
-                      </div>
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() =>
-                        appendProject({
-                          title: '',
-                          description: '',
-                          period: '',
-                          startDate: '',
-                          endDate: '',
-                          technologies: [],
-                          highlights: [],
-                          link: '',
-                          image: '',
-                        })
-                      }
-                      className="mt-4"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Project
-                    </Button>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                        <div className="space-y-2 col-span-2">
+                          <Label htmlFor={`project-description-${index}`}>{t('description')}</Label>
+                          <Textarea id={`project-description-${index}`} rows={3} value={project.description} onChange={(e) => handleProjectChange(index, 'description', e.target.value)} />
+                        </div>
+                        {/* Technologies would need a more complex editor for array handling */}
+                      </CardContent>
+                    </Card>
+                  ))}
 
-              <div className="flex justify-end gap-4">
-                <Button type="reset" variant="outline">
-                  Reset
-                </Button>
-                <Button type="submit">
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Changes
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+                  <Button onClick={addProject} className="w-full">
+                    <Plus className="mr-2 h-4 w-4" /> {t('addProject')}
+                  </Button>
+                </TabsContent>
+              </ScrollArea>
+            </Tabs>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
