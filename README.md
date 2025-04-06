@@ -1,80 +1,60 @@
 # Interactive Resume Builder
 
-A modern, interactive resume builder built with React, TypeScript, and shadcn/ui. Create, customize, and showcase your professional experience with a beautiful, responsive interface.
+A modern, interactive resume builder created with React, TypeScript, and shadcn/ui. Display your professional experience with a clean, responsive interface.
 
 ![Interactive Resume Builder Screenshot](screenshot.png)
 
-## 🌟 Features
+## ✨ Features
 
-- **Interactive UI**: Clean, modern interface with smooth animations and transitions
-- **Dark/Light Mode**: Built-in theme support with system preference detection
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **Multiple Sections**:
+- **Interactive UI** with smooth animations and responsive design
+- **Theme Support** with automatic dark/light mode switching
+- **Comprehensive Sections**:
   - 📋 Professional Profile
   - 💼 Work Experience with Timeline View
   - 🎯 Skills Visualization
   - 🎓 Education History
-  - 🚀 Project Showcase
+  - 🚀 Project Gallery
   - 📬 Contact Form
-
-- **Interactive Features**:
-  - Timeline visualization for experience
-  - Animated skill progress bars
-  - Project gallery with modal views
-  - Contact form with validation
-  - In-place resume editing
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v16+)
 - npm or yarn
 
-### Installation
+### Quick Start
 
-1. Clone the repository:
 ```bash
+# Clone repository
 git clone https://github.com/yourusername/interactive-resume.git
 cd interactive-resume
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Start the development server:
-```bash
+# Start development server
 npm run dev
 ```
 
-4. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
-
-### Building for Production
-
-```bash
-npm run build
-```
+Visit [http://localhost:5173](http://localhost:5173) to view your resume.
 
 ### Deployment
 
-To deploy to GitHub Pages:
 ```bash
+# Build for production
+npm run build
+
+# Deploy to GitHub Pages
 npm run deploy
 ```
 
-## 🛠 Technologies Used
+## 🛠️ Tech Stack
 
-- **Framework**: React with TypeScript
-- **Styling**: 
-  - Tailwind CSS
-  - shadcn/ui components
-  - CSS variables for theming
-- **Animation**: Framer Motion
-- **Form Handling**: 
-  - React Hook Form
-  - Zod validation
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **Components**: shadcn/ui component library
+- **Animations**: Framer Motion
+- **Forms**: React Hook Form with Zod validation
 - **Icons**: Lucide React
 - **Build Tool**: Vite
 
@@ -82,48 +62,40 @@ npm run deploy
 
 ```
 src/
-├── components/         # React components
-│   ├── ui/            # shadcn/ui components
-│   ├── resume/        # Resume section components
-│   ├── animations/    # Animation components
-│   ├── editor/        # Resume editing components
-│   └── theme/         # Theme components
-├── types/             # TypeScript type definitions
-├── styles/            # Global styles and themes
-├── lib/              # Utility functions
+├── components/        # React components
+│   ├── ui/           # UI components
+│   ├── resume/       # Resume section components
+│   ├── animations/   # Animation components
+│   └── theme/        # Theme components
+├── types/            # TypeScript definitions
+├── styles/           # Global styles
+├── lib/              # Utilities
 └── data/             # Resume data
 ```
 
 ## 🎨 Customization
 
-### Updating Resume Data
-
-Edit `src/data/resumeData.ts` to update your personal information:
+Update your resume by modifying `src/data/resumeData.ts`:
 
 ```typescript
 export const resumeData = {
   profile: {
     name: "Your Name",
-    title: "Your Title",
-    // ...
+    title: "Your Position",
+    // ...other details
   },
-  // ...
+  // ...other sections
 }
 ```
 
-### Theming
+## 📱 Responsive Design
 
-1. Modify the theme variables in `src/index.css`:
-```css
-:root {
-  --primary: 222.2 47.4% 11.2%;
-  /* ... other theme variables */
-}
-```
+Fully responsive across all devices:
+- Desktop (1024px+)
+- Tablet (768px-1023px)
+- Mobile (<768px)
 
-2. Or use the built-in theme toggle for dark/light mode.
-
-## 🔧 Available Scripts
+## 📋 Available Scripts
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
@@ -131,20 +103,12 @@ export const resumeData = {
 - `npm run lint` - Run ESLint
 - `npm run deploy` - Deploy to GitHub Pages
 
-## 📱 Supporting Mobile Devices
-
-The resume is fully responsive and supports various screen sizes:
-
-- Desktop (1024px and above)
-- Tablet (768px to 1023px)
-- Mobile (below 768px)
-
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
 ## 📄 License
@@ -153,23 +117,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [shadcn/ui](https://ui.shadcn.com/) for the beautiful component library
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-- [Framer Motion](https://www.framer.com/motion/) for animations
-- [Lucide](https://lucide.dev/) for the icons
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Lucide](https://lucide.dev/)
 
-## 📞 Support
+## 🔮 Roadmap
 
-For support, email your.email@example.com or create an issue in this repository.
-
-## 🔮 Future Enhancements
-
-- [ ] Add PDF export functionality
-- [ ] Implement data persistence with backend integration
-- [ ] Add more project templates
-- [ ] Include rich text editing for descriptions
-- [ ] Add more animation options
-- [ ] Implement multi-language support
+- [ ] PDF export functionality
+- [ ] Data persistence with backend integration
+- [ ] Additional project templates
+- [ ] Rich text editing for descriptions
+- [ ] Enhanced animations
+- [ ] Multi-language support
 
 ## 📸 Screenshots
 
@@ -181,3 +141,7 @@ For support, email your.email@example.com or create an issue in this repository.
 
 ### Mobile View
 ![Mobile View](mobile-screenshot.png)
+
+## 📞 Support
+
+For support, please create an issue in this repository or contact: your.email@example.com

@@ -1,9 +1,9 @@
 // src/App.tsx
-import { ThemeProvider } from "@/components/theme/ThemeProvider"
-import { ThemeToggle } from "@/components/theme/ThemeToggle"
-import { EditModeManager } from "@/components/EditModeManager"
-import { Toaster } from "@/components/ui/toaster"
-import { resumeData } from '@/data/resumeData'
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { EditModeManager } from '@/components/EditModeManager';
+import { Toaster } from '@/components/ui/toaster';
+import { resumeData } from '@/data/resumeData';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Toaster />
       </div>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

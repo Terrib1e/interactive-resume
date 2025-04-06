@@ -1,68 +1,69 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* Modern blue-based professional palette */
+    --background: 210 40% 98%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    /* Primary blue - more vibrant for better accent */
+    --primary: 215 90% 55%;
     --primary-foreground: 210 40% 98%;
 
+    /* Secondary tones */
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 215.4 16.3% 56.9%;
 
-    --accent: 210 40% 96.1%;
+    /* Accent colors */
+    --accent: 215 90% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
+    /* Utility colors */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
+    --ring: 215 90% 55%;
     --radius: 0.5rem;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary blue - more vibrant for dark mode */
+    --primary: 215 90% 55%;
+    --primary-foreground: 210 40% 98%;
 
+    /* Dark mode secondary tones */
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted-foreground: 215 20.2% 75.1%;
 
-    --accent: 217.2 32.6% 17.5%;
+    /* Dark mode accent */
+    --accent: 215 90% 20%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    /* Utility colors */
+    --destructive: 0 62.8% 40.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 215 90% 55%;
   }
 }
 
@@ -70,7 +71,229 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Improve typography */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+}
+
+@layer components {
+
+  /* Improved card styling */
+  .card {
+    @apply transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg;
+  }
+
+  /* Enhanced button styling */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all;
+  }
+
+  /* Badge styling */
+  .badge-skill {
+    @apply text-xs font-medium px-2.5 py-0.5 rounded-full bg-primary/10 text-primary-foreground;
+  }
+}
+
+/* Split view styles */
+.split-view-container {
+  @apply flex flex-col h-screen overflow-hidden;
+}
+
+.panel-content {
+  @apply h-full overflow-auto p-4;
+}
+
+.resize-handle {
+  @apply relative w-1.5 bg-border cursor-col-resize transition-colors;
+}
+
+.resize-handle:hover,
+.resize-handle:active {
+  @apply bg-primary/40;
+}
+
+/* Resume section highlighting */
+.resume-section {
+  @apply transition-all duration-300 relative pl-2 mb-6;
+}
+
+.resume-section.section-active {
+  @apply border-l-4 border-primary bg-accent/30 pl-4;
+}
+
+/* Focus mode styling */
+.focus-mode .resume-section:not(.section-active) {
+  @apply opacity-40 blur-[0.5px] transition-all duration-300;
+}
+
+.focus-mode .resume-section:hover:not(.section-active) {
+  @apply opacity-80 blur-none;
+}
+
+/* Improved tab styles */
+.tabs-button {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.tabs-button:hover {
+  @apply bg-accent text-accent-foreground;
+}
+
+.tabs-button[data-state="active"] {
+  @apply bg-primary text-primary-foreground shadow-sm;
+}
+
+/* Print-specific styling */
+@media print {
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide interactive UI elements */
+  button,
+  .tabs-list,
+  .edit-controls,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Make sure content is visible */
+  .tabs-content {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Ensure page breaks don't occur in the middle of sections */
+  .resume-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Card styling for print */
+  .card {
+    @apply border shadow-none;
+  }
+
+  /* Ensure good contrast for text */
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  li,
+  a {
+    color: black !important;
+  }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+/* Add to your index.css */
+@layer utilities {
+  .dark-card {
+    @apply dark:bg-dark-card dark:border-dark-border dark:text-dark-text;
+  }
+
+  .dark-badge {
+    @apply dark:bg-dark-muted/30 dark:text-dark-highlight dark:hover:bg-dark-muted/50;
+  }
+
+  .dark-accent {
+    @apply dark:text-dark-accent;
+  }
+
+  .dark-highlight {
+    @apply dark:text-dark-highlight;
+  }
+}
+
+/* Smooth transitions for dark mode */
+.dark .card,
+.dark .badge,
+.dark .btn,
+.dark * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }

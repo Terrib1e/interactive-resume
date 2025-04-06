@@ -10,7 +10,7 @@ export const resumeData = {
       bio: "Passionate and versatile Full Stack Engineer with 10+ years of experience developing and maintaining diverse applications. Skilled in frontend and backend technologies, cloud services, and database management. Proven track record in leading projects, mentoring teams, and delivering scalable, maintainable solutions.",
       avatar: "/api/placeholder/400/400",
       links: {
-        github: "",
+        github: "terrib1e",
         linkedin: ""
       }
     },

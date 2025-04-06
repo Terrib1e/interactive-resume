@@ -1,65 +1,205 @@
 /* src/styles/print.css */
+
+/* Base print styles */
 @media print {
-    @page {
-      margin: 20mm;
-    }
-
-    body {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-
-    /* Hide interactive elements */
-    button:not([data-print="true"]),
-    .no-print {
-      display: none !important;
-    }
-
-    /* Ensure dark mode doesn't affect printing */
-    [data-theme="dark"] {
-      --background: 0 0% 100%;
-      --foreground: 222.2 84% 4.9%;
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
-      --primary: 222.2 47.4% 11.2%;
-      --primary-foreground: 210 40% 98%;
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 222.2 84% 4.9%;
-    }
-
-    /* Force page breaks between sections */
-    section {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-
-    /* Enhance readability */
-    p, li {
-      page-break-inside: avoid;
-      orphans: 3;
-      widows: 3;
-    }
-
-    /* Ensure links are readable */
-    a {
-      text-decoration: underline;
-      color: #000 !important;
-    }
-
-    /* Show link URLs */
-    a[href^="http"]:after {
-      content: " (" attr(href) ")";
-      font-size: 0.8em;
-    }
+  @page {
+    margin: 20mm;
+    size: A4;
   }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Hide interactive elements */
+  button:not([data-print="true"]),
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure dark mode doesn't affect printing */
+  :root[class~="dark"],
+  [data-theme="dark"] {
+    --background: 0 0% 100% !important;
+    --foreground: 222.2 84% 4.9% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 222.2 84% 4.9% !important;
+    --popover: 0 0% 100% !important;
+    --popover-foreground: 222.2 84% 4.9% !important;
+    --primary: 222.2 47.4% 11.2% !important;
+    --primary-foreground: 210 40% 98% !important;
+    --secondary: 210 40% 96.1% !important;
+    --secondary-foreground: 222.2 47.4% 11.2% !important;
+    --muted: 210 40% 96.1% !important;
+    --muted-foreground: 215.4 16.3% 46.9% !important;
+    --accent: 210 40% 96.1% !important;
+    --accent-foreground: 222.2 47.4% 11.2% !important;
+    --destructive: 0 84.2% 60.2% !important;
+    --destructive-foreground: 210 40% 98% !important;
+    --border: 214.3 31.8% 91.4% !important;
+    --input: 214.3 31.8% 91.4% !important;
+    --ring: 222.2 84% 4.9% !important;
+  }
+
+  /* Force page breaks between sections */
+  section,
+  .page-break-inside-avoid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Force page breaks before certain elements */
+  h1, h2, h3,
+  .page-break-before {
+    page-break-before: always;
+    break-before: always;
+  }
+
+  /* Ensure no page breaks after headings */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Enhance readability */
+  p, li {
+    page-break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Text links */
+  a {
+    text-decoration: none;
+    color: inherit !important;
+  }
+
+  /* Show link URLs for external links */
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    font-style: italic;
+    color: #555;
+  }
+
+  /* But don't show URLs for internal links or javascript: links */
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+
+  /* Improve table presentation */
+  table {
+    border-collapse: collapse !important;
+  }
+
+  /* Remove shadows and effects that don't print well */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+  }
+}
+
+/* Additional styles for PDF export */
+body.print-export {
+  background-color: white !important;
+
+  /* Ensure consistent colors during export */
+  --background: 0 0% 100% !important;
+  --foreground: 222.2 84% 4.9% !important;
+  --card: 0 0% 100% !important;
+  --card-foreground: 222.2 84% 4.9% !important;
+
+  /* Hide elements during export */
+  [data-export="false"],
+  .no-export {
+    display: none !important;
+  }
+
+  /* Remove any scrollbars */
+  overflow: hidden !important;
+}
+
+/* Targeting specific resume components */
+@media print {
+  /* Adjust the resume container */
+  .resume-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+body.print-export {
+  /* Adjust the resume container */
+  .resume-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Ensure all content is visible */
+  .resume-content {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Adjust headings and text for better print layout */
+  .resume-heading {
+    margin-bottom: 1rem !important;
+  }
+
+  .resume-section {
+    margin-bottom: 1.5rem !important;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure good contrast for skills */
+  .skill-bar {
+    border: 1px solid #000 !important;
+    background-color: #f0f0f0 !important;
+  }
+
+  .skill-progress {
+    background-color: #333 !important;
+  }
+
+  /* Format the tabs properly */
+  .tabs-content-print {
+    display: block !important;
+    visibility: visible !important;
+  }
+    /* Add to your print.css */
+    @media print {
+
+      /* Remove background colors and use borders instead */
+      .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+      }
+
+      /* Ensure text is black for better printing */
+      body {
+        color: black !important;
+      }
+
+      /* Enhance readability of headings */
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: black !important;
+        page-break-after: avoid;
+      }
+
+      /* Ensure page breaks don't occur in awkward places */
+      .experience-item,
+      .education-item,
+      .project-item {
+        page-break-inside: avoid;
+      }
+    }
+}
