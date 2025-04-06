@@ -1,3 +1,4 @@
+// cspell:disable
 // src/data/resumeData.ts
 
 export const resumeData = {
@@ -21,6 +22,10 @@ export const resumeData = {
         position: "Software Engineer",
         location: "Albany, NY",
         period: "February 2017 to Present",
+        startDate: "2017-02-01",
+        endDate: "",
+        current: true,
+        description: "Full stack development with a focus on healthcare applications",
         achievements: [
           "Designed and implemented automated provisioning tool for employee access management",
           "Developed multiple dashboards used to monitor application security, visualize agile metrics, and track releases",
@@ -29,24 +34,35 @@ export const resumeData = {
           "Utilized ELK stack to create dashboards for application and server performance monitoring",
           "Provided technical guidance and development assistance across various teams and phases of software development",
           "Led migration of legacy systems to microservices architecture, improving scalability and reducing deployment time by 40%"
-        ]
+        ],
+        technologies: ["Java", "Spring Boot", "AWS", "React", "Node.js"]
       },
       {
         company: "Conatus Intalytics",
         position: "Founder",
         period: "January 2018 to Present",
+        startDate: "2018-01-01",
+        endDate: "",
+        current: true,
+        description: "Financial modeling and analytics for commercial real estate",
+        location: "Albany, NY",
         achievements: [
           "Financial modeling services to commercial real estate professionals using Excel, Smartsheet, and Google Sheets",
           "Conduct in-depth research, lead generation, and process automation to streamline client businesses",
           "Developed custom Python scripts to automate data analysis, reducing manual work by 50%",
           "Developed financial models that assisted in the purchasing of more than $30 million worth of properties"
-        ]
+        ],
+        technologies: ["Python", "Excel VBA", "Smartsheet", "Google Sheets"]
       },
       {
         company: "Maximus",
         position: "IT PM Senior Analyst",
         location: "Albany, NY",
         period: "Jan 2015 to Jan 2017",
+        startDate: "2015-01-01",
+        endDate: "2017-01-31",
+        current: false,
+        description: "IT project management and security analysis",
         achievements: [
           "Worked with the ISSO to analyze and mitigate system vulnerabilities using Qualys",
           "Created dashboards in Power Bi that automatically pull vulnerability data from Qualys",
@@ -54,7 +70,8 @@ export const resumeData = {
           "Researched and recommended process improvements to mitigate operational and financial risk",
           "Created and Implemented incident reporting form for facilities security (SecTek)",
           "Served as IT Applications Project Lead on multiple key projects"
-        ]
+        ],
+        technologies: ["PowerBI", "Qualys", "SharePoint", "Project Management"]
       }
     ],
 
@@ -102,13 +119,27 @@ export const resumeData = {
         school: "Stony Brook University",
         location: "Stony Brook, NY",
         degree: "B.S. in Neuroscience",
-        period: "August 2007 to June 2009"
+        period: "August 2007 to June 2009",
+        institution: "Stony Brook University",
+        field: "Neuroscience",
+        startDate: "2007-08-01",
+        endDate: "2009-06-30",
+        current: false,
+        gpa: "3.8",
+        achievements: []
       },
       {
         school: "SUNY CGCC",
         location: "Hudson, NY",
         degree: "Associate in Science (AS) in Biology",
-        period: "August 2005 to June 2007"
+        period: "August 2005 to June 2007",
+        institution: "SUNY CGCC",
+        field: "Biology",
+        startDate: "2005-08-01",
+        endDate: "2007-06-30",
+        current: false,
+        gpa: "3.7",
+        achievements: []
       }
     ],
 

@@ -23,6 +23,7 @@ import type { ResumeData } from '@/types/resume';
 
 interface EditModeManagerProps {
   initialData: ResumeData;
+  initialData: ResumeData;
 }
 
 // Define the edit modes
@@ -207,5 +208,6 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
       {/* Only show ExportButton in preview mode */}
       {editMode === 'preview' && <ExportButton />}
     </div>
+  );
   );
 }

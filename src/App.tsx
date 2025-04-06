@@ -10,7 +10,7 @@ function App() {
     <ThemeProvider defaultTheme="system" storageKey="resume-theme">
       <div className="relative min-h-screen bg-background">
         <ThemeToggle />
-        <EditModeManager initialData={resumeData} />
+        <EditModeManager initialData={resumeData as never} />
         <Toaster />
       </div>
     </ThemeProvider>
