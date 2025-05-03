@@ -9,7 +9,7 @@ export const resumeData = {
     email: 'elijahclark@protonmail.com',
     phone: '+1 518 728 2461',
     bio: 'Dynamic Full Stack Engineer with 10+ years of experience architecting, building, and scaling robust applications across healthcare, real estate, and beyond. Expertise spans modern frontend (Angular, React), comprehensive back-end development (Node.js, Java/Spring Boot, Python), and cloud ecosystems (AWS, Azure, GCP). Skilled in database design (SQL, NoSQL) and leveraging AI/ML to drive smarter decision-making. Proven track record migrating monoliths to microservices—cutting deployment time by 40%—and automating workflows that boost operational efficiency by 30%. SAFe-certified leader and mentor who champions continuous learning, delivers high-impact solutions, and fosters collaborative innovation. Willing to relocate: Anywhere.',
-    avatar: '/api/placeholder/400/400',
+    avatar: 'profile-picture.jpg',
     links: {
       github: 'terrib1e',
       linkedin: '',
