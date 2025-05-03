@@ -48,9 +48,9 @@ export const Experience: React.FC<ExperienceProps> = ({ experience }) => {
           ))}
         </ul>
 
-        {experience.technologies && experience.technologies.length > 0 && (
+        {experience.skills && Array.isArray(experience.skills) && experience.skills.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-dark-border">
-            {experience.technologies.map((tech: string, i: number) => (
+            {experience.skills.map((tech: string, i: number) => (
               <Badge
                 key={i}
                 variant="secondary"

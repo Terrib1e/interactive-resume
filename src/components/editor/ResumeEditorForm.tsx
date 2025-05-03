@@ -158,7 +158,7 @@ interface ResumeEditorFormProps {
 export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEditorFormProps) {
   const [activeAccordion, setActiveAccordion] = useState<string | null>('profile');
   const [formCompletion, setFormCompletion] = useState<Record<string, number>>({});
-  const [formValues, setFormValues] = useState<any>({});
+  const [, setFormValues] = useState<any>({});
 
   // Track completion status of each section
   useEffect(() => {

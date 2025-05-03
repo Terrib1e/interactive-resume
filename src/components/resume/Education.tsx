@@ -21,7 +21,7 @@ export const Education: React.FC<EducationProps> = ({ education }) => {
         </CardDescription>
         <CardDescription>{education.period}</CardDescription>
 
-        {education.achievements && education.achievements.length > 0 && (
+        {education.achievements && Array.isArray(education.achievements) && education.achievements.length > 0 && (
           <div className="mt-4">
             <h4 className="font-semibold mb-2">Achievements</h4>
             <ul className="list-disc list-inside space-y-1">

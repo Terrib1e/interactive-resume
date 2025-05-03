@@ -1,4 +1,5 @@
 // src/types/resume.ts (with schema added)
+import { ReactNode } from 'react';
 import * as z from 'zod';
 
 export interface Profile {
@@ -10,12 +11,15 @@ export interface Profile {
   bio: string;
   avatar: string;
   links: {
+    website?: string;
     github: string;
     linkedin: string;
   };
 }
 
 export interface Experience {
+  technologies: boolean;
+  skills: boolean;
   company: string;
   position: string;
   location: string;
@@ -51,14 +55,18 @@ export interface Education {
   startDate: string;
   endDate: string;
   current: boolean;
+  achievements: string[];
+  gpa?: number;
 }
 
 export interface Project {
+  image?: string;
+  period: string;
   title: string;
   description: string;
   technologies: string[];
   highlights: string[];
-  link: string;
+  link?: string;
   startDate?: string;
   endDate?: string;
   current?: boolean;

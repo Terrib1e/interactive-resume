@@ -39,7 +39,7 @@ export const Projects: React.FC<ProjectsProps> = ({ data }) => {
                 <CardDescription className="flex items-center gap-2 mt-1">
                   <Calendar className="w-4 h-4" />
                   <span>
-                    {formatDate(project.startDate)}
+                    {formatDate(project.startDate || '')}
                     {project.endDate && ` - ${formatDate(project.endDate)}`}
                   </span>
                 </CardDescription>

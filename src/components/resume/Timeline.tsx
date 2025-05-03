@@ -59,7 +59,10 @@ export const Timeline: React.FC<TimelineProps> = ({ experiences }) => {
 
                       {experience.technologies && (
                         <div className="flex flex-wrap gap-1 mt-2">
-                          {experience.technologies.slice(0, 3).map((tech, i) => (
+                          {(Array.isArray(experience.technologies)
+                            ? experience.technologies.slice(0, 3)
+                            : []
+                          ).map((tech: string, i: number) => (
                             <Badge key={i} variant="secondary" className="text-xs">
                               {tech}
                             </Badge>

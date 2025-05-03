@@ -1,5 +1,5 @@
 // src/components/ContactForm.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -7,7 +7,6 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label'; // Assuming Label is separate or use FormLabel
 import { toast } from '@/hooks/use-toast'; // Import your toast function
 import {
   Form,
@@ -34,7 +33,7 @@ const FORMSPREE_ENDPOINT_URL = 'https://formspree.io/f/xovdekll'; // Your Formsp
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),

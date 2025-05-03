@@ -154,11 +154,11 @@ const ResumePreview = ({
                     <li key={i}>{achievement}</li>
                   ))}
                 </ul>
-                {exp.technologies && exp.technologies.length > 0 && (
+                {exp.technologies && Array.isArray(exp.technologies) && exp.technologies.length > 0 && (
                   <div className="mt-2">
                     <span className={cn('font-semibold mr-1', isPrintMode ? 'text-sm' : '')}>Technologies:</span>
                     <div className="flex flex-wrap gap-2">
-                      {exp.technologies.map((tech, i) => (
+                      {exp.technologies.map((tech: string, i: number) => (
                         <Badge key={i} variant="secondary" className={cn(isPrintMode ? 'text-xs' : '')}>
                           {tech}
                         </Badge>
@@ -242,7 +242,7 @@ const ResumePreview = ({
               <h2 className={cn(templateStyles.headingClass, isPrintMode ? 'text-xl' : '')}>Certifications</h2>
               <ul className={cn('list-disc list-inside space-y-2', isPrintMode ? 'text-base text-gray-700' : '')}>
                 {data.certifications.map((cert, index) => (
-                  <li key={index}>{cert}</li>
+                  <li key={index}>{typeof cert === 'string' ? cert : cert.name}</li>
                 ))}
               </ul>
             </section>
