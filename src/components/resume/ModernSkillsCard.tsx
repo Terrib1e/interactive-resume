@@ -1,5 +1,4 @@
 // src/components/resume/ModernSkillsCard.tsx
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { motion } from 'framer-motion';
 import type { Skill } from '@/types/resume';

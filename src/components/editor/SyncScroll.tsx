@@ -26,13 +26,10 @@ export function SyncScroll({ editorRef, previewRef, enabled = true }: SyncScroll
       setIsScrolling('editor')
 
       // Calculate relative scroll position
-      const editorScrollRatio = editorElement.scrollTop /
-        (editorElement.scrollHeight - editorElement.clientHeight)
+      const editorScrollRatio = editorElement.scrollTop / (editorElement.scrollHeight - editorElement.clientHeight)
+      const previewTargetScroll = editorScrollRatio * (previewElement.scrollHeight - previewElement.clientHeight)
 
       // Apply the same ratio to preview
-      const previewTargetScroll = editorScrollRatio *
-        (previewElement.scrollHeight - previewElement.clientHeight)
-
       previewElement.scrollTop = previewTargetScroll
 
       // Reset scrolling state after a short delay
@@ -52,13 +49,10 @@ export function SyncScroll({ editorRef, previewRef, enabled = true }: SyncScroll
       setIsScrolling('preview')
 
       // Calculate relative scroll position
-      const previewScrollRatio = previewElement.scrollTop /
-        (previewElement.scrollHeight - previewElement.clientHeight)
+      const previewScrollRatio = previewElement.scrollTop / (previewElement.scrollHeight - previewElement.clientHeight)
+      const editorTargetScroll = previewScrollRatio * (editorElement.scrollHeight - editorElement.clientHeight)
 
       // Apply the same ratio to editor
-      const editorTargetScroll = previewScrollRatio *
-        (editorElement.scrollHeight - editorElement.clientHeight)
-
       editorElement.scrollTop = editorTargetScroll
 
       // Reset scrolling state after a short delay

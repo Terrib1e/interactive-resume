@@ -38,6 +38,14 @@ export function SectionHighlighter({ activeSection, previewRef, editorRef }: Sec
           sectionElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
         }, 100)
       }
+
+      // Also scroll the editor to the corresponding section
+      if (editorRef.current) {
+        const editorSection = editorRef.current.querySelector(`[data-section="${activeSection}"]`)
+        if (editorSection) {
+          editorSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        }
+      }
     }
 
     return () => {
@@ -45,7 +53,7 @@ export function SectionHighlighter({ activeSection, previewRef, editorRef }: Sec
         clearTimeout(highlightTimeoutRef.current)
       }
     }
-  }, [activeSection, previewRef])
+  }, [activeSection, previewRef, editorRef])
 
   return null // This is a utility component with no UI
 }

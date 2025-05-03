@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { Badge } from '@/components/ui';
 import { Button } from '@/components/ui';
 import { FadeIn } from '@/components/animations/fade-in';
-import { Star, GitFork, ExternalLink, Github, Clock } from 'lucide-react';
+import { Star, ExternalLink, Github, Clock } from 'lucide-react';
 import { fetchUserRepos, GithubRepo } from '@/services/github';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -12,8 +12,6 @@ interface GitHubProjectsProps {
   username: string;
   count?: number;
 }
-const githubUsername = import.meta.env.GITHUB_TOKEN || 'default-username';
-
 
 export function GitHubProjects({ username, count = 6 }: GitHubProjectsProps) {
   const [repos, setRepos] = useState<GithubRepo[]>([]);

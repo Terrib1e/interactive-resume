@@ -6,9 +6,10 @@ import type { Profile } from '@/types/resume';
 
 interface HeroSectionProps {
   profile: Profile;
+  onContactClick?: () => void;
 }
 
-export function HeroSection({ profile }: HeroSectionProps) {
+export function HeroSection({ profile, onContactClick }: HeroSectionProps) {
   // Handler for smooth scrolling to main content
   const handleViewResumeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -63,7 +64,25 @@ export function HeroSection({ profile }: HeroSectionProps) {
               </a>
 
               <a
-                href={`mailto:${profile.email}`}
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onContactClick?.();
+
+                  // Wait for the tab content to be visible before scrolling
+                  const checkAndScroll = () => {
+                    const contactSection = document.getElementById('contact');
+                    if (contactSection && contactSection.offsetParent !== null) {
+                      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                      // If not visible yet, check again after a short delay
+                      setTimeout(checkAndScroll, 50);
+                    }
+                  };
+
+                  // Start checking after a brief initial delay
+                  setTimeout(checkAndScroll, 100);
+                }}
                 className="px-6 py-3 bg-transparent border border-primary-500 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-md transition-all"
               >
                 Contact Me

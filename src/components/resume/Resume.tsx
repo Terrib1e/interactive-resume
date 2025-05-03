@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
-import { Briefcase, GraduationCap, Code, MessageSquare, FolderGit2, Github, Server, Database, BarChart, Cloud, Sun, Moon } from 'lucide-react';
+import { Briefcase, GraduationCap, Code, MessageSquare, FolderGit2, Github, Server, Database, BarChart, Cloud, Sun, Moon, Award } from 'lucide-react';
 import { ProjectGallery } from './ProjectGallery';
 import { ContactForm } from '../contact/ContactForm';
 import { Education } from './Education';
@@ -14,14 +14,17 @@ import { Button } from '@/components/ui/button';
 import type { ResumeData } from '@/types/resume';
 import { GitHubProjects } from './GithubProjects';
 import { ModernSkillsCard } from './ModernSkillsCard';
+import { Certifications } from './Certifications';
 
 interface ResumeProps {
   data: ResumeData;
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
 }
 
 const githubUsername = import.meta.env.GITHUB_USERNAME || 'terrib1e';
 
-const Resume: React.FC<ResumeProps> = ({ data }) => {
+const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
@@ -37,13 +40,13 @@ const Resume: React.FC<ResumeProps> = ({ data }) => {
       </Button>
 
       {/* Hero Section */}
-      <HeroSection profile={data.profile} />
+      <HeroSection profile={data.profile} onContactClick={() => onTabChange?.('contact')} />
 
       {/* Main Content */}
       <div className="container max-w-5xl mx-auto px-6 py-12" id="resume-scroll-target">
         <Card className="shadow-lg transition-all duration-300 hover:shadow-xl border-none overflow-hidden">
           <CardContent className="p-0">
-            <Tabs defaultValue="experience" className="w-full">
+            <Tabs defaultValue="experience" value={activeTab} onValueChange={onTabChange} className="w-full">
               <div className="bg-primary-50 dark:bg-gray-800 border-b px-4 py-2">
                 <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 gap-1 bg-muted/50">
                   <TabsTrigger value="experience" className="data-[state=active]:bg-white dark:data-[state=active]:bg-blue-600">
@@ -60,6 +63,11 @@ const Resume: React.FC<ResumeProps> = ({ data }) => {
                     <span className="hidden md:inline">Education</span>
                     <span className="inline md:hidden">Edu</span>
                   </TabsTrigger>
+                  {/* <TabsTrigger value="certifications" className="data-[state=active]:bg-white dark:data-[state=active]:bg-blue-600">
+                    <Award className="w-4 h-4 mr-2" />
+                    <span className="hidden md:inline">Certifications</span>
+                    <span className="inline md:hidden">Certs</span>
+                  </TabsTrigger> */}
                   <TabsTrigger value="projects" className="data-[state=active]:bg-white dark:data-[state=active]:bg-blue-600">
                     <FolderGit2 className="w-4 h-4 mr-2" />
                     <span>Projects</span>
@@ -114,26 +122,21 @@ const Resume: React.FC<ResumeProps> = ({ data }) => {
                     {data.certifications && data.certifications.length > 0 && (
                       <div className="mt-10">
                         <h3 className="text-xl font-semibold mb-4 text-primary-600 dark:text-blue-400">Certifications</h3>
-                        <Card className="shadow-sm">
-                          <CardContent className="p-6">
-                            <ul className="space-y-2">
-                              {data.certifications.map((cert, index) => (
-                                <li key={index} className="flex items-start">
-                                  <div className="flex-shrink-0 mt-1">
-                                    <svg className="w-5 h-5 text-primary-500 dark:text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                  </div>
-                                  <span className="ml-3">{cert}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </CardContent>
-                        </Card>
+                        <Certifications certifications={data.certifications} />
                       </div>
                     )}
                   </div>
                 </TabsContent>
+
+                {/* Certifications Tab */}
+                {/* <TabsContent value="certifications" className="mt-0 animate-fade-in">
+                  <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">Professional Certifications</h2>
+                  {data.certifications && data.certifications.length > 0 ? (
+                    <Certifications certifications={data.certifications} />
+                  ) : (
+                    <p className="text-muted-foreground">No certifications added yet.</p>
+                  )}
+                </TabsContent> */}
 
                 {/* Projects Tab */}
                 <TabsContent value="projects" className="mt-0 animate-fade-in">
@@ -150,7 +153,7 @@ const Resume: React.FC<ResumeProps> = ({ data }) => {
                 {/* Contact Tab */}
                 <TabsContent value="contact" className="mt-0 animate-fade-in">
                   <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">Get In Touch</h2>
-                  <div className="max-w-2xl mx-auto">
+                  <div id="contact" className="max-w-2xl mx-auto">
                     <ContactForm />
                   </div>
                 </TabsContent>

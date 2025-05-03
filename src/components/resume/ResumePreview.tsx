@@ -133,12 +133,12 @@ const ResumePreview = ({
         </CardHeader>
 
         <CardContent className={cn(isSplitView ? 'h-full overflow-y-auto' : '')}>
-          <section className="mb-8">
+          <section className="mb-8 resume-section" data-section="profile">
             <h2 className={cn(templateStyles.headingClass, isPrintMode ? 'text-xl' : '')}>About Me</h2>
             <p className={cn(templateStyles.bodyClass, isPrintMode ? 'text-base' : '')}>{data.profile.bio}</p>
           </section>
 
-          <section className="mb-8">
+          <section className="mb-8 resume-section" data-section="experience">
             <h2 className={cn(templateStyles.headingClass, isPrintMode ? 'text-xl' : '')}>Experience</h2>
             {data.experience.map((exp, index) => (
               <div key={index} className={cn('mb-6', isPrintMode ? 'mb-4' : '')}>
@@ -192,7 +192,7 @@ const ResumePreview = ({
             ))}
           </section>
 
-          <section className="mb-8">
+          <section className="mb-8 resume-section" data-section="education">
             <h2 className={cn(templateStyles.headingClass, isPrintMode ? 'text-xl' : '')}>Education</h2>
             {data.education.map((edu, index) => (
               <div key={index} className={cn('mb-6', isPrintMode ? 'mb-4' : '')}>
@@ -215,37 +215,13 @@ const ResumePreview = ({
           </section>
 
           {data.projects && data.projects.length > 0 && (
-            <section className="mb-8">
+            <section className="mb-8 resume-section" data-section="projects">
               <h2 className={cn(templateStyles.headingClass, isPrintMode ? 'text-xl' : '')}>Projects</h2>
               {data.projects.map((project, index) => (
-                <div key={index} className={cn('mb-6 p-4 border rounded-lg', isPrintMode ? 'mb-4 p-3 border-gray-200' : '')}>
+                <div key={index} className={cn('mb-6', isPrintMode ? 'mb-4' : '')}>
                   <h3 className={cn('text-xl font-semibold mb-1', isPrintMode ? 'text-lg' : '')}>{project.title}</h3>
-                  <p className={cn('text-gray-600 dark:text-gray-400 mb-1', isPrintMode ? 'text-sm' : '')}>
-                    {project.period} ({project.startDate} - {project.endDate || 'Present'})
-                  </p>
-                  <p className={cn(templateStyles.bodyClass, isPrintMode ? 'text-base' : '')}>{project.description}</p>
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={cn('text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 mb-2', isPrintMode ? 'text-sm' : '', templateStyles.accentColor)}
-                    >
-                      {project.link}
-                    </a>
-                  )}
-                  {project.technologies && project.technologies.length > 0 && (
-                    <div className="mb-2">
-                      <span className={cn('font-semibold mr-1', isPrintMode ? 'text-sm' : '')}>Technologies:</span>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech, i) => (
-                          <Badge key={i} variant="secondary" className={cn(isPrintMode ? 'text-xs' : '')}>
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <p className={cn('text-gray-600 dark:text-gray-400 mb-1', isPrintMode ? 'text-sm' : '')}>{project.period}</p>
+                  <p className={cn('text-muted-foreground mb-2', isPrintMode ? 'text-base' : '')}>{project.description}</p>
                   {project.highlights && project.highlights.length > 0 && (
                     <div>
                       <span className={cn('font-semibold mb-1', isPrintMode ? 'text-sm' : '')}>Highlights:</span>
@@ -262,7 +238,7 @@ const ResumePreview = ({
           )}
 
           {data.certifications && data.certifications.length > 0 && (
-            <section className="mb-8">
+            <section className="mb-8 resume-section" data-section="certifications">
               <h2 className={cn(templateStyles.headingClass, isPrintMode ? 'text-xl' : '')}>Certifications</h2>
               <ul className={cn('list-disc list-inside space-y-2', isPrintMode ? 'text-base text-gray-700' : '')}>
                 {data.certifications.map((cert, index) => (
@@ -273,7 +249,7 @@ const ResumePreview = ({
           )}
 
           {data.additionalInfo && data.additionalInfo.length > 0 && (
-            <section>
+            <section className="resume-section" data-section="additionalInfo">
               <h2 className={cn(templateStyles.headingClass, isPrintMode ? 'text-xl' : '')}>Additional Information</h2>
               <ul className={cn('list-disc list-inside space-y-2', isPrintMode ? 'text-base text-gray-700' : '')}>
                 {data.additionalInfo.map((info, index) => (

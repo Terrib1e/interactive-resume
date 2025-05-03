@@ -18,9 +18,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Plus, Trash2, Save, MapPin, Calendar, Briefcase, GraduationCap, Code, FolderGit2, Award, FileText, CheckCircle2, User } from 'lucide-react';
+import { Plus, Trash2,Briefcase, GraduationCap, Code, FolderGit2, Award, FileText, CheckCircle2, User } from 'lucide-react';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { ResumeData } from '@/types/resume';
 
@@ -159,6 +158,7 @@ interface ResumeEditorFormProps {
 export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEditorFormProps) {
   const [activeAccordion, setActiveAccordion] = useState<string | null>('profile');
   const [formCompletion, setFormCompletion] = useState<Record<string, number>>({});
+  const [formValues, setFormValues] = useState<any>({});
 
   // Track completion status of each section
   useEffect(() => {
@@ -233,6 +233,23 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
       setActiveSection(value === '' ? null : value);
     }
   };
+
+  // Watch for form changes
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      // Update the form values for preview
+      setFormValues(value as ResumeData);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
+
+  // Handle section expansion
+  useEffect(() => {
+    if (activeAccordion && setActiveSection) {
+      setActiveSection(activeAccordion);
+    }
+  }, [activeAccordion, setActiveSection]);
 
   // Field arrays for form collections
   const {
@@ -394,7 +411,7 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
           <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
             <Accordion type="single" collapsible defaultValue="profile" value={activeAccordion || undefined} onValueChange={handleAccordionChange} className="border rounded-md">
               {/* Profile Section */}
-              <AccordionItem value="profile" className="border-b">
+              <AccordionItem value="profile" className="border-b resume-section" data-section="profile">
                 <AccordionTrigger className="px-4 py-2 hover:bg-muted/50 data-[state=open]:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <User className="w-5 h-5 text-muted-foreground" />
@@ -548,7 +565,7 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
               </AccordionItem>
 
               {/* Experience Section */}
-              <AccordionItem value="experience" className="border-b">
+              <AccordionItem value="experience" className="border-b resume-section" data-section="experience">
                 <AccordionTrigger className="px-4 py-2 hover:bg-muted/50 data-[state=open]:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <Briefcase className="w-5 h-5 text-muted-foreground" />
@@ -745,7 +762,7 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
               </AccordionItem>
 
               {/* Skills Section */}
-              <AccordionItem value="skills" className="border-b">
+              <AccordionItem value="skills" className="border-b resume-section" data-section="skills">
                 <AccordionTrigger className="px-4 py-2 hover:bg-muted/50 data-[state=open]:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <Code className="w-5 h-5 text-muted-foreground" />
@@ -793,7 +810,7 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
               </AccordionItem>
 
               {/* Education Section */}
-              <AccordionItem value="education" className="border-b">
+              <AccordionItem value="education" className="border-b resume-section" data-section="education">
                 <AccordionTrigger className="px-4 py-2 hover:bg-muted/50 data-[state=open]:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <GraduationCap className="w-5 h-5 text-muted-foreground" />
@@ -972,7 +989,7 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
               </AccordionItem>
 
               {/* Projects Section */}
-              <AccordionItem value="projects" className="border-b">
+              <AccordionItem value="projects" className="border-b resume-section" data-section="projects">
                 <AccordionTrigger className="px-4 py-2 hover:bg-muted/50 data-[state=open]:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <FolderGit2 className="w-5 h-5 text-muted-foreground" />
@@ -1215,7 +1232,7 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
               </AccordionItem>
 
               {/* Certifications Section */}
-              <AccordionItem value="certifications" className="border-b">
+              <AccordionItem value="certifications" className="border-b resume-section" data-section="certifications">
                 <AccordionTrigger className="px-4 py-2 hover:bg-muted/50 data-[state=open]:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <Award className="w-5 h-5 text-muted-foreground" />
@@ -1249,7 +1266,7 @@ export function ResumeEditorForm({ form, onSubmit, setActiveSection }: ResumeEdi
               </AccordionItem>
 
               {/* Additional Info Section */}
-              <AccordionItem value="additionalInfo">
+              <AccordionItem value="additionalInfo" className="resume-section" data-section="additionalInfo">
                 <AccordionTrigger className="px-4 py-2 hover:bg-muted/50 data-[state=open]:bg-muted/50">
                   <div className="flex items-center gap-2">
                     <FileText className="w-5 h-5 text-muted-foreground" />

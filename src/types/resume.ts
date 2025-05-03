@@ -2,14 +2,29 @@
 import * as z from 'zod';
 
 export interface Profile {
-  avatar: string | undefined;
-  links: any;
   name: string;
   title: string;
   location: string;
   email: string;
   phone: string;
   bio: string;
+  avatar: string;
+  links: {
+    github: string;
+    linkedin: string;
+  };
+}
+
+export interface Experience {
+  company: string;
+  position: string;
+  location: string;
+  period: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+  description: string;
+  achievements: string[];
 }
 
 export interface Skill {
@@ -18,56 +33,76 @@ export interface Skill {
   experience?: string;
 }
 
-export interface Experience {
-  company: string;
-  position: string;
-  location?: string;
-  period: string;
-  achievements: string[];
-  technologies?: string[];
+export interface Skills {
+  frontend: Skill[];
+  backend: Skill[];
+  cloud: Skill[];
+  databases: Skill[];
+  analytics: Skill[];
 }
 
 export interface Education {
   school: string;
-  degree: string;
   location: string;
+  degree: string;
   period: string;
-  achievements?: string[];
-  gpa?: number;
+  institution: string;
+  field: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
 }
 
 export interface Project {
-  startDate: string;
-  endDate: string;
   title: string;
   description: string;
-  period: string;
   technologies: string[];
   highlights: string[];
-  link?: string;
-  image?: string;
+  link: string;
+  startDate?: string;
+  endDate?: string;
+  current?: boolean;
+  impact?: string;
+  demoUrl?: string;
+  role?: string;
+}
+
+export interface Certification {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+  credentialUrl: string;
+  skills?: string[];
 }
 
 export interface ResumeData {
-  projects: Project[];
-  profile: Profile;
+  profile: {
+    name: string;
+    title: string;
+    location: string;
+    email: string;
+    phone: string;
+    bio: string;
+    avatar: string;
+    links: {
+      github: string;
+      linkedin: string;
+      website?: string;
+    };
+  };
   experience: Experience[];
   skills: {
     frontend: Skill[];
     backend: Skill[];
-    cloud: Skill[];
-    databases: Skill[];
-    analytics: Skill[];
+    cloud?: Skill[];
+    databases?: Skill[];
+    analytics?: Skill[];
   };
   education: Education[];
-  certifications: string[];
+  certifications: Certification[];
   additionalInfo: string[];
-  social: {
-    github: string; // GitHub username
-    linkedin: string;
-    twitter?: string;
-  };
-
+  projects: Project[];
 }
 
 // Zod schema for form validation
@@ -92,10 +127,13 @@ export const resumeSchema = z.object({
     z.object({
       company: z.string().min(2, 'Company name must be at least 2 characters'),
       position: z.string().min(2, 'Position must be at least 2 characters'),
-      location: z.string().optional(),
+      location: z.string(),
       period: z.string(),
+      startDate: z.string(),
+      endDate: z.string(),
+      current: z.boolean(),
+      description: z.string(),
       achievements: z.array(z.string()),
-      technologies: z.array(z.string()).optional(),
     }),
   ),
   skills: z.object({
@@ -166,6 +204,15 @@ export const resumeSchema = z.object({
       }),
     )
     .optional(),
-  certifications: z.array(z.string()).optional(),
+  certifications: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      issuer: z.string(),
+      date: z.string(),
+      credentialUrl: z.string(),
+      skills: z.array(z.string()).optional(),
+    })
+  ).optional(),
   additionalInfo: z.array(z.string()).optional(),
 });

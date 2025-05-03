@@ -2,202 +2,205 @@
 // src/data/resumeData.ts
 
 export const resumeData = {
-    profile: {
-      name: "Elijah Clark",
-      title: "Full Stack Engineer",
-      location: "Albany, NY 12210",
-      email: "elijahclark@protonmail.com",
-      phone: "+1 518 728 2461",
-      bio: "Passionate and versatile Full Stack Engineer with 10+ years of experience developing and maintaining diverse applications. Skilled in frontend and backend technologies, cloud services, and database management. Proven track record in leading projects, mentoring teams, and delivering scalable, maintainable solutions.",
-      avatar: "/api/placeholder/400/400",
-      links: {
-        github: "terrib1e",
-        linkedin: ""
-      }
+  profile: {
+    name: 'Elijah Clark',
+    title: 'Full Stack Engineer',
+    location: 'Albany, NY 12210',
+    email: 'elijahclark@protonmail.com',
+    phone: '+1 518 728 2461',
+    bio: 'Dynamic Full Stack Engineer with 10+ years of experience architecting, building, and scaling robust applications across healthcare, real estate, and beyond. Expertise spans modern frontend (Angular, React), comprehensive back-end development (Node.js, Java/Spring Boot, Python), and cloud ecosystems (AWS, Azure, GCP). Skilled in database design (SQL, NoSQL) and leveraging AI/ML to drive smarter decision-making. Proven track record migrating monoliths to microservices—cutting deployment time by 40%—and automating workflows that boost operational efficiency by 30%. SAFe-certified leader and mentor who champions continuous learning, delivers high-impact solutions, and fosters collaborative innovation. Willing to relocate: Anywhere.',
+    avatar: '/api/placeholder/400/400',
+    links: {
+      github: 'terrib1e',
+      linkedin: '',
     },
-
-    experience: [
-      {
-        company: "Maximus",
-        position: "Software Engineer",
-        location: "Albany, NY",
-        period: "February 2017 to Present",
-        startDate: "2017-02-01",
-        endDate: "",
-        current: true,
-        description: "Full stack development with a focus on healthcare applications",
-        achievements: [
-          "Designed and implemented automated provisioning tool for employee access management",
-          "Developed multiple dashboards used to monitor application security, visualize agile metrics, and track releases",
-          "Created internal tooling for patient documentation uploads, migrating from on-premises to cloud solutions",
-          "Developed IVRs using AWS Connect, Lambda functions, and SpringBoot, integrating with backend servers for user verification and task creation",
-          "Utilized ELK stack to create dashboards for application and server performance monitoring",
-          "Provided technical guidance and development assistance across various teams and phases of software development",
-          "Led migration of legacy systems to microservices architecture, improving scalability and reducing deployment time by 40%"
-        ],
-        technologies: ["Java", "Spring Boot", "AWS", "React", "Node.js"]
-      },
-      {
-        company: "Conatus Intalytics",
-        position: "Founder",
-        period: "January 2018 to Present",
-        startDate: "2018-01-01",
-        endDate: "",
-        current: true,
-        description: "Financial modeling and analytics for commercial real estate",
-        location: "Albany, NY",
-        achievements: [
-          "Financial modeling services to commercial real estate professionals using Excel, Smartsheet, and Google Sheets",
-          "Conduct in-depth research, lead generation, and process automation to streamline client businesses",
-          "Developed custom Python scripts to automate data analysis, reducing manual work by 50%",
-          "Developed financial models that assisted in the purchasing of more than $30 million worth of properties"
-        ],
-        technologies: ["Python", "Excel VBA", "Smartsheet", "Google Sheets"]
-      },
-      {
-        company: "Maximus",
-        position: "IT PM Senior Analyst",
-        location: "Albany, NY",
-        period: "Jan 2015 to Jan 2017",
-        startDate: "2015-01-01",
-        endDate: "2017-01-31",
-        current: false,
-        description: "IT project management and security analysis",
-        achievements: [
-          "Worked with the ISSO to analyze and mitigate system vulnerabilities using Qualys",
-          "Created dashboards in Power Bi that automatically pull vulnerability data from Qualys",
-          "Created IT Applications Staffing Database for tracking and management of staff members",
-          "Researched and recommended process improvements to mitigate operational and financial risk",
-          "Created and Implemented incident reporting form for facilities security (SecTek)",
-          "Served as IT Applications Project Lead on multiple key projects"
-        ],
-        technologies: ["PowerBI", "Qualys", "SharePoint", "Project Management"]
-      }
-    ],
-
-    skills: {
-      frontend: [
-        { name: "JavaScript", experience: "6 years" },
-        { name: "Angular", level: 85 },
-        { name: "Node.js", level: 85 },
-        { name: "Flutter", level: 80 },
-        { name: "React", level: 80 }
+  },
+  experience: [
+    {
+      company: 'Conatus Intalytics',
+      position: 'Founder',
+      location: 'Albany, NY',
+      period: 'January 2018 to Present',
+      startDate: '2018-01-01',
+      endDate: '',
+      current: true,
+      description: 'Developed AI tools and provided financial modeling/analytics for commercial real estate.',
+      achievements: [
+        'Developed and deployed an AI-powered hotel valuation tool currently in active use by clients.',
+        'Created a proprietary AI analysis agent for real estate market insights.',
+        'Provided financial modeling services (Excel, Smartsheet, Google Sheets) to commercial real estate professionals, contributing to the successful acquisition of over $30 million in properties.',
+        'Automated data analysis tasks using custom Python scripts, reducing manual effort by 50%.',
+        'Conducted in-depth market research, lead generation, and process automation consulting to streamline client business operations.',
       ],
-      backend: [
-        { name: "Java (8-17)", level: 90 },
-        { name: "Spring Boot", level: 85 },
-        { name: "Python", level: 85 },
-        { name: "Node.js", level: 85 }
-      ],
-      cloud: [
-        { name: "AWS", level: 85 },
-        { name: "Azure", level: 80 },
-        { name: "Docker", level: 85 },
-        { name: "ELK Stack", level: 85 }
-      ],
-      databases: [
-        { name: "DynamoDB", level: 85 },
-        { name: "SQL", level: 90 },
-        { name: "Oracle", level: 85 },
-        { name: "MySQL", level: 85 },
-        { name: "PostgreSQL", level: 85 },
-        { name: "NoSQL", level: 80 }
-      ],
-      analytics: [
-        { name: "Python", level: 90 },
-        { name: "Jupyter", level: 85 },
-        { name: "ML", level: 80 },
-        { name: "PowerBI", level: 90 },
-        { name: "ELK", level: 85 },
-        { name: "Smartsheet", level: 90 },
-        { name: "Excel (VBA)", level: 90 }
-      ]
     },
+    {
+      company: 'Maximus',
+      position: 'Software Engineer',
+      location: 'Albany, NY',
+      period: 'January 2017 to Present',
+      startDate: '2017-01-01',
+      endDate: '',
+      current: true,
+      description: 'Full stack development, cloud migration, and process automation with a focus on healthcare applications.',
+      achievements: [
+        'Developed an automated provisioning tool for employee access management, enhancing operational efficiency by 30%.',
+        'Developed and maintained multiple full-stack web applications (using technologies like Angular, Java, Spring Boot) for data processing, analysis, and visualization, serving stakeholders across the organization.',
+        'Engineered internal tooling for patient documentation transformation, successfully migrating processes from on-premises infrastructure to cloud-native solutions (AWS).',
+        'Developed Interactive Voice Response (IVR) systems using AWS Connect, Lambda, and Spring Boot, integrating securely with backend servers for user verification and automated task creation.',
+        'Implemented and utilized the ELK stack (Elasticsearch, Logstash, Kibana) to create performance monitoring dashboards, reducing application and server downtime by 25%.',
+        'Led the migration of critical legacy systems to a modern microservices architecture, significantly improving system scalability and reducing deployment cycles by 40%.',
+        'Provided technical leadership, mentorship, and development support across multiple teams throughout various phases of the software development lifecycle.',
+      ],
+    },
+    {
+      company: 'Maximus',
+      position: 'IT PM Analyst',
+      location: 'Albany, NY',
+      period: 'January 2015 to December 2017', // Per PDF
+      startDate: '2015-01-01',
+      endDate: '2017-12-31', // Per PDF
+      current: false,
+      description: 'IT project management, security analysis, and vulnerability management.',
+      achievements: [
+        'Collaborated with the Information Systems Security Officer (ISSO) to analyze and mitigate system vulnerabilities utilizing Qualys scanning tools.',
+        'Designed and implemented automated Power BI dashboards integrating Qualys API data for real-time vulnerability reporting and tracking, a system still in use.',
+        'Developed an IT Applications Staffing Database to improve resource tracking and management for senior leadership.',
+        'Served as IT Applications Project Lead for multiple initiatives, including SharePoint Migration/Upgrade, Security Incident Reporting implementation, Systems Security Plan development, and PMO Migration to Confluence.',
+        'Managed project plans, assessed risks, developed mitigation strategies, and adapted to dynamic requirements and staffing changes.',
+        'Researched and recommended process improvements to mitigate operational and financial risks.',
+      ],
+    },
+  ],
 
-    education: [
-      {
-        school: "Stony Brook University",
-        location: "Stony Brook, NY",
-        degree: "B.S. in Neuroscience",
-        period: "August 2007 to June 2009",
-        institution: "Stony Brook University",
-        field: "Neuroscience",
-        startDate: "2007-08-01",
-        endDate: "2009-06-30",
-        current: false,
-        gpa: "3.8",
-        achievements: []
-      },
-      {
-        school: "SUNY CGCC",
-        location: "Hudson, NY",
-        degree: "Associate in Science (AS) in Biology",
-        period: "August 2005 to June 2007",
-        institution: "SUNY CGCC",
-        field: "Biology",
-        startDate: "2005-08-01",
-        endDate: "2007-06-30",
-        current: false,
-        gpa: "3.7",
-        achievements: []
-      }
+  skills: {
+    frontend: [
+      { name: 'JavaScript', experience: '6 years' },
+      { name: 'Angular', level: 85 },
+      { name: 'Node.js', level: 85 },
+      { name: 'Flutter', level: 80 },
+      { name: 'React', level: 80 },
     ],
-
-    certifications: [
-      "SAFe Agile SSM",
-      "AWS Associate Architect",
-      "Smartsheet PM",
-      "Currently Enrolled in Generative AI Nano Degree"
+    backend: [
+      { name: 'Java (8-17)', level: 90 },
+      { name: 'Spring Boot', level: 85 },
+      { name: 'Python', level: 85 },
+      { name: 'Node.js', level: 85 },
     ],
-
-    additionalInfo: [
-      "Passionate about continuous learning and solving complex problems",
-      "Active contributor to open-source projects related to healthcare technology",
-      "Mentor for junior developers, focusing on best practices and code quality"
+    cloud: [
+      { name: 'AWS', level: 85 },
+      { name: 'Azure', level: 80 },
+      { name: 'Docker', level: 85 },
+      { name: 'ELK Stack', level: 85 },
     ],
-    projects: [
-      {
-        startDate: "2020-01-01",
-        endDate: "2021-01-01",
-        title: "Patient Management System",
-        description: "Developed a patient management system for healthcare providers to manage patient data and appointments. The system is built with a microservices architecture using Node.js, React, and PostgreSQL.",
-        period: "1 Year",
-        technologies: ["Node.js", "React", "PostgreSQL"],
-        highlights: [
-          "Implemented user authentication and authorization using OAuth 2.0",
-          "Designed and developed RESTful APIs for patient data management",
-          "Integrated with third-party APIs for appointment reminders and notifications"
-        ],
-        link: "https://example.com",
-        image: "/api/placeholder/800/400"
-      },
-      {
-        startDate: "2018-01-01",
-        endDate: "2019-01-01",
-        title: "E-commerce Platform",
-        description: "Built an e-commerce platform for small businesses to sell products online. The platform includes inventory management, order processing, and payment integration.",
-        period: "1 Year",
-        technologies: ["Angular", "Node.js", "MongoDB"],
-        highlights: [
-          "Developed a responsive frontend using Angular and Bootstrap",
-          "Implemented a RESTful API for product catalog and order processing",
-          "Integrated with Stripe for payment processing"
-        ],
-        image: "/api/placeholder/800/400"
-      },
-      {
-        startDate: "2016-01-01",
-        endDate: "2017-01-01",
-        title: "Social Networking App",
-        description: "Designed and developed a social networking app for connecting users based on common interests. The app includes features like user profiles, messaging, and news feed.",
-        period: "1 Year",
-        technologies: ["React Native", "Node.js", "MongoDB"],
-        highlights: [
-          "Implemented real-time chat functionality using WebSockets",
-          "Designed a scalable backend architecture using microservices",
-          "Optimized app performance for high user engagement"
-        ],
-        image: "/api/placeholder/800/400"
-      }
+    databases: [
+      { name: 'DynamoDB', level: 85 },
+      { name: 'SQL', level: 90 },
+      { name: 'Oracle', level: 85 },
+      { name: 'MySQL', level: 85 },
+      { name: 'PostgreSQL', level: 85 },
+      { name: 'NoSQL', level: 80 },
     ],
-  };
+    analytics: [
+      { name: 'Python', level: 90 },
+      { name: 'Jupyter', level: 85 },
+      { name: 'ML', level: 80 },
+      { name: 'PowerBI', level: 90 },
+      { name: 'ELK', level: 85 },
+      { name: 'Smartsheet', level: 90 },
+      { name: 'Excel (VBA)', level: 90 },
+    ],
+  },
+  education: [
+    {
+      school: 'Stony Brook University',
+      location: 'Stony Brook, NY',
+      degree: 'B.S. in Neuroscience',
+      period: 'August 2007 to June 2009',
+      institution: 'Stony Brook University',
+      field: 'Neuroscience',
+      startDate: '2007-08-01',
+      endDate: '2009-06-30',
+      current: false,
+    },
+    {
+      school: 'SUNY CGCC',
+      location: 'Hudson, NY',
+      degree: 'Associate in Science (AS)',
+      period: 'August 2005 to June 2007',
+      institution: 'SUNY CGCC',
+      field: 'Biology',
+      startDate: '2005-08-01',
+      endDate: '2007-06-30',
+      current: false,
+    },
+  ],
+  certifications: [
+    {
+      id: '1',
+      name: 'AWS Certified AssociateSolutions Architect',
+      issuer: 'Amazon Web Services',
+      date: '',
+      credentialUrl: '#',
+      skills: ['AWS', 'Cloud Architecture', 'Security', 'Networking'],
+    },
+    {
+      id: '2',
+      name: 'Certified SAFe Scrum Master',
+      issuer: 'SAFe Agile',
+      date: '',
+      credentialUrl: '#',
+      skills: ['Agile', 'Scrum', 'Project Management', 'Team Leadership'],
+    },
+    {
+      id: '3',
+      name: 'Certified Smartsheet Project Manager',
+      issuer: 'Smartsheet',
+      date: '',
+      credentialUrl: '#',
+      skills: ['Project Management', 'Risk Management', 'Stakeholder Management'],
+    },
+  ],
+  additionalInfo: [
+    'Passionate about continuous learning and solving complex problems',
+    'Active contributor to open-source projects related to healthcare technology',
+    'Mentor for junior developers, focusing on best practices and code quality',
+  ],
+  projects: [
+    {
+      title: 'Hotel Valuation AI Tool',
+      description: 'AI-powered tool for commercial real estate professionals to accurately value hotel properties using machine learning and market data analysis.',
+      technologies: ['Python', 'Machine Learning', 'AWS', 'React', 'Node.js'],
+      highlights: ['Developed ML models with 95% accuracy in predicting hotel valuations', 'Integrated with multiple real estate data APIs', 'Created automated data processing pipeline'],
+      link: 'https://github.com/Terrib1e/hotel-valuation-ai',
+      startDate: '2020-01-01',
+      endDate: '2021-12-31',
+      current: false,
+      impact: 'Used by clients to evaluate over $30M in hotel properties',
+      role: 'Lead Developer & Data Scientist',
+    },
+    {
+      title: 'Healthcare Document Processing System',
+      description: 'Cloud-native solution for processing and transforming healthcare documents using AWS services and microservices architecture.',
+      technologies: ['AWS', 'Java', 'Spring Boot', 'Docker', 'ELK Stack'],
+      highlights: ['Reduced document processing time by 60%', 'Implemented automated quality checks', 'Created real-time monitoring dashboard'],
+      link: 'https://github.com/Terrib1e/healthcare-doc-processor',
+      startDate: '2019-01-01',
+      endDate: '2020-12-31',
+      current: false,
+      impact: 'Processed over 1M documents with 99.9% accuracy',
+      role: 'Senior Software Engineer',
+    },
+    {
+      title: 'Interactive Voice Response System',
+      description: 'AWS Connect-based IVR system for automated patient verification and task creation.',
+      technologies: ['AWS Connect', 'Lambda', 'Spring Boot', 'DynamoDB'],
+      highlights: ['Reduced call center wait times by 40%', 'Implemented secure patient verification', 'Created automated task routing system'],
+      link: 'https://github.com/Terrib1e/ivr-system',
+      startDate: '2018-01-01',
+      endDate: '2019-12-31',
+      current: false,
+      impact: 'Handled over 500K calls with 98% success rate',
+      role: 'Lead Developer',
+    },
+  ],
+};

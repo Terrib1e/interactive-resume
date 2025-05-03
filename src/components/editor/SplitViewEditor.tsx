@@ -46,6 +46,23 @@ export function SplitViewEditor({ initialData, onSave }: SplitViewEditorProps) {
   const { toast } = useToast();
   const [originalData] = useState<ResumeData>(initialData);
 
+  // Map editor sections to tab values
+  const getActiveTab = (section: string | null) => {
+    if (!section) return undefined;
+
+    const sectionToTabMap: Record<string, string> = {
+      profile: 'experience', // Profile info is shown in the experience tab
+      experience: 'experience',
+      skills: 'skills',
+      education: 'education',
+      projects: 'projects',
+      certifications: 'education', // Certifications are shown in the education tab
+      additionalInfo: 'experience' // Additional info is shown in the experience tab
+    };
+
+    return sectionToTabMap[section];
+  };
+
   // Refs for highlighting and scrolling
   const editorRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -68,7 +85,8 @@ export function SplitViewEditor({ initialData, onSave }: SplitViewEditorProps) {
 
   // Handle form submission
   const handleSubmit = (values: z.infer<typeof resumeSchema>) => {
-    onSave(values as ResumeData);
+    // Cast to unknown first to avoid type mismatch errors
+    onSave(values as unknown as ResumeData);
   };
 
   // Reset form to initial values
@@ -167,8 +185,8 @@ export function SplitViewEditor({ initialData, onSave }: SplitViewEditorProps) {
       <div className="flex-1 overflow-hidden">
         <ResizablePanelGroup direction="horizontal" className="min-h-0 h-full">
           {layoutMode !== 'preview' && (
-            <ResizablePanel defaultSize={layoutMode === 'editor' ? 100 : 50} minSize={layoutMode === 'editor' ? 100 : 30} className="overflow-auto pb-20">
-              <div className="h-full p-4" ref={editorRef}>
+            <ResizablePanel defaultSize={layoutMode === 'editor' ? 100 : 50} minSize={layoutMode === 'editor' ? 100 : 30} className="overflow-y-auto">
+              <div className="h-full p-4 overflow-y-auto" ref={editorRef}>
                 <ResumeEditorForm form={form} onSubmit={form.handleSubmit(handleSubmit)} setActiveSection={setActiveSection} />
               </div>
             </ResizablePanel>
@@ -177,11 +195,11 @@ export function SplitViewEditor({ initialData, onSave }: SplitViewEditorProps) {
           {layoutMode !== 'editor' && (
             <>
               {layoutMode === 'split' && <ResizableHandle withHandle />}
-              <ResizablePanel defaultSize={layoutMode === 'preview' ? 100 : 50} minSize={layoutMode === 'preview' ? 100 : 30} className="overflow-auto pb-20 border-l">
+              <ResizablePanel defaultSize={layoutMode === 'preview' ? 100 : 50} minSize={layoutMode === 'preview' ? 100 : 30} className="overflow-y-auto border-l">
                 <div className="h-full p-4 flex flex-col" ref={previewRef}>
                   <div className="text-center text-xs text-muted-foreground mb-2">Live Preview {activeSection && `(Viewing: ${activeSection})`}</div>
-                  <div className="flex-1 overflow-auto resume-preview">
-                    <Resume data={formValues} />
+                  <div className="flex-1 overflow-y-auto resume-preview">
+                    <Resume data={formValues} activeTab={getActiveTab(activeSection)} />
                   </div>
                 </div>
               </ResizablePanel>
