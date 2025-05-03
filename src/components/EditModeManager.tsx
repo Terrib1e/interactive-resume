@@ -6,7 +6,6 @@ import { SplitViewEditor } from '@/components/editor/SplitViewEditor';
 import { Edit, Eye, Save, Download, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { ExportButton } from '@/components/ExportButton';
 import {
   AlertDialog,
   AlertDialogAction,
