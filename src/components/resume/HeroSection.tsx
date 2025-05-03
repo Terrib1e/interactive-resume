@@ -95,7 +95,24 @@ export function HeroSection({ profile, onContactClick }: HeroSectionProps) {
             <div className="relative w-64 h-64 lg:w-80 lg:h-80">
               {profile.avatar ? (
                 <div className="w-full h-full rounded-full overflow-hidden border-4 border-primary-200 dark:border-primary-800 shadow-2xl">
-                  <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
+                  <img
+                    src={profile.avatar}
+                    alt={profile.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Failed to load avatar image:', profile.avatar);
+                      // If image fails to load, show initials instead
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        const initialsDiv = document.createElement('div');
+                        initialsDiv.className = 'w-full h-full rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center border-4 border-primary-200 dark:border-primary-800 shadow-2xl';
+                        initialsDiv.innerHTML = `<span class="text-7xl font-bold text-white">${getInitials(profile.name)}</span>`;
+                        parent.appendChild(initialsDiv);
+                      }
+                    }}
+                  />
                 </div>
               ) : (
                 <div className="w-full h-full rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center border-4 border-primary-200 dark:border-primary-800 shadow-2xl">
