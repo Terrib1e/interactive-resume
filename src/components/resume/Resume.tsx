@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
-import { Briefcase, GraduationCap, Code, MessageSquare, FolderGit2, Github, Server, Database, BarChart, Cloud, Sun, Moon, Award } from 'lucide-react';
+import { Briefcase, GraduationCap, Code, MessageSquare, FolderGit2, Github, Server, Database, BarChart, Cloud, Sun, Moon } from 'lucide-react';
 import { ProjectGallery } from './ProjectGallery';
 import { ContactForm } from '../contact/ContactForm';
 import { Education } from './Education';

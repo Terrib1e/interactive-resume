@@ -1,5 +1,4 @@
 // src/types/resume.ts (with schema added)
-import { ReactNode } from 'react';
 import * as z from 'zod';
 
 export interface Profile {
