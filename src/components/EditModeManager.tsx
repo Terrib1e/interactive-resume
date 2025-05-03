@@ -205,8 +205,8 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
       {/* Main Content */}
       {editMode === 'split' ? <SplitViewEditor initialData={resumeData} onSave={handleSave} /> : <Resume data={resumeData} />}
 
-      {/* Only show ExportButton in preview mode */}
-      {editMode === 'preview' && <ExportButton />}
+      {/* Only show ExportButton in preview mode
+      {editMode === 'preview' && <ExportButton />} */}
     </div>
   );
 
