@@ -23,18 +23,18 @@ const contactFormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   subject: z.string().min(5, { message: 'Subject must be at least 5 characters.' }),
   message: z.string().min(10, { message: 'Message must be at least 10 characters.' }),
-  // Optional: Add a honeypot field for basic spam protection if needed by Formspree (check their docs)
-  // _gotcha: z.string().optional(),
+  // Honeypot field for spam protection
+  _gotcha: z.string().optional(),
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
 
+// Updated Formspree endpoint - make sure this is your actual endpoint
 const FORMSPREE_ENDPOINT_URL = 'https://formspree.io/f/xovdekll'; // Your Formspree URL
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -42,50 +42,60 @@ export function ContactForm() {
       email: '',
       subject: '',
       message: '',
+      _gotcha: '', // Honeypot field
     },
   });
-
   async function onSubmit(values: ContactFormValues) {
     setIsSubmitting(true);
-    setSubmitStatus('idle'); // Reset status on new submission
+    setSubmitStatus('idle');
+
+    // Check honeypot field - if filled, it's likely spam
+    if (values._gotcha) {
+      console.log('Spam detected via honeypot');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch(FORMSPREE_ENDPOINT_URL, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json', // Important: Ask Formspree for a JSON response
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          subject: values.subject,
+          message: values.message,
+          _replyto: values.email, // This tells Formspree which email to reply to
+        }),
       });
 
       if (response.ok) {
-        // Handle successful submission (response.ok means status 200-299)
         setSubmitStatus('success');
         toast({
-          title: 'Message Sent!',
-          description: 'Thanks for reaching out. I will get back to you soon.',
-          variant: 'default', // Or 'success' if you have one
+          title: 'Message Sent Successfully! 🎉',
+          description: 'Thank you for reaching out! I will get back to you within 24 hours.',
+          variant: 'default',
         });
-        form.reset(); // Clear the form
+        form.reset();
       } else {
-        // Handle errors (e.g., Formspree validation errors, server issues)
-        const errorData = await response.json().catch(() => ({})); // Try to parse error, default to empty object
+        const errorData = await response.json().catch(() => ({}));
         console.error('Formspree submission error:', errorData);
         setSubmitStatus('error');
         toast({
           title: 'Submission Failed',
-          description: errorData.error || 'Could not send message. Please try again later.',
+          description: errorData.error || 'Could not send message. Please try again or email me directly.',
           variant: 'destructive',
         });
       }
     } catch (error) {
-      // Handle network errors
       console.error('Network error submitting form:', error);
       setSubmitStatus('error');
       toast({
         title: 'Network Error',
-        description: 'Could not connect to send message. Please check your connection.',
+        description: 'Could not connect to send message. Please check your connection and try again.',
         variant: 'destructive',
       });
     } finally {
@@ -152,25 +162,34 @@ export function ContactForm() {
               <FormMessage />
             </FormItem>
           )}
-        />
-
-        {/* Optional: Honeypot field for spam protection - must be hidden */}
-        {/* <FormField
+        />        {/* Honeypot field for spam protection - must be hidden */}
+        <FormField
           control={form.control}
           name="_gotcha"
           render={({ field }) => (
             <FormItem className="hidden" style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
-              <FormLabel>Don't fill this out</FormLabel>
+              <FormLabel>Don't fill this out if you're human</FormLabel>
               <FormControl>
                 <Input tabIndex={-1} autoComplete="off" {...field} />
               </FormControl>
             </FormItem>
           )}
-        /> */}
+        />
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? 'Sending...' : 'Send Message'}
         </Button>
+
+        {/* Helpful contact information */}
+        <div className="text-center text-sm text-muted-foreground mt-4">
+          <p>You can also reach me directly at:</p>
+          <a 
+            href="mailto:elijahclark@protonmail.com" 
+            className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 underline"
+          >
+            elijahclark@protonmail.com
+          </a>
+        </div>
 
         {/* Optional: Display simple status messages directly if not relying solely on toasts */}
         {/* {submitStatus === 'success' && <p className="text-green-600">Message sent successfully!</p>}

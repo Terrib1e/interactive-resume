@@ -112,11 +112,42 @@ export function SplitViewEditor({ initialData, onSave }: SplitViewEditorProps) {
     }
   }, [focusMode, activeSection]);
 
+  // Track scroll positions when switching layouts
+  const [editorScrollPosition, setEditorScrollPosition] = useState(0);
+  const [previewScrollPosition, setPreviewScrollPosition] = useState(0);
+
+  // Save scroll positions before layout changes
+  useEffect(() => {
+    return () => {
+      if (editorRef.current) {
+        setEditorScrollPosition(editorRef.current.scrollTop);
+      }
+      if (previewRef.current) {
+        setPreviewScrollPosition(previewRef.current.scrollTop);
+      }
+    };
+  }, [layoutMode]);
+
+  // Restore scroll positions after layout changes
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.scrollTop = editorScrollPosition;
+    }
+    if (previewRef.current) {
+      previewRef.current.scrollTop = previewScrollPosition;
+    }
+  }, [layoutMode, editorScrollPosition, previewScrollPosition]);
+
   return (
     <div className="h-screen pt-14 flex flex-col">
       {/* Section highlighter and sync scroll utilities */}
       <SectionHighlighter activeSection={activeSection} previewRef={previewRef} editorRef={editorRef} />
-      <SyncScroll editorRef={editorRef} previewRef={previewRef} enabled={syncScrollEnabled} />
+      <SyncScroll 
+        editorRef={editorRef} 
+        previewRef={previewRef} 
+        enabled={syncScrollEnabled} 
+        activeSection={activeSection}
+      />
 
       {/* Fixed toolbar */}
       <div className="fixed top-14 left-0 right-0 z-30 bg-background border-b p-2 flex justify-between items-center">

@@ -39,9 +39,9 @@ export interface Skill {
 export interface Skills {
   frontend: Skill[];
   backend: Skill[];
-  cloud: Skill[];
-  databases: Skill[];
-  analytics: Skill[];
+  cloud?: Skill[];
+  databases?: Skill[];
+  analytics?: Skill[];
 }
 
 export interface Education {
