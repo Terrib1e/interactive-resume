@@ -1,5 +1,4 @@
 // src/components/resume/SkillsRadarChart.tsx
-import React from "react";
 import { motion } from "framer-motion";
 import type { Skills } from "@/types/resume";
 

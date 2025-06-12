@@ -25,9 +25,7 @@ export function ModernSkillsCard({
 
   if (variant === "compact") {
     return (
-      <Card
-        className={`overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${className}`}
-      >
+      <Card className={`overflow-hidden card-enhanced ${className}`}>
         <CardHeader className="pb-3 bg-gradient-to-br from-primary-50 to-primary-100/50 dark:from-primary-900/20 dark:to-primary-800/10">
           <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
             <Icon
@@ -62,7 +60,7 @@ export function ModernSkillsCard({
 
   return (
     <Card
-      className={`overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary-200/20 dark:hover:shadow-primary-800/20 group ${className}`}
+      className={`overflow-hidden card-enhanced group ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

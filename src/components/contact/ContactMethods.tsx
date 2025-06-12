@@ -120,6 +120,7 @@ export function ContactMethods({ profile }: ContactMethodsProps) {
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  {" "}
                   <Button
                     variant="outline"
                     size="sm"
@@ -130,9 +131,8 @@ export function ContactMethods({ profile }: ContactMethodsProps) {
                     title={`Copy ${method.label}`}
                   >
                     <Copy className="w-3 h-3" />
-                  </Button>{" "}
+                  </Button>
                   <Button variant="outline" size="sm" asChild className="h-8">
-                    {" "}
                     <a
                       href={method.href}
                       target={

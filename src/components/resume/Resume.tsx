@@ -157,10 +157,10 @@ const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
 
               {/* Tab contents */}
               <div className="p-4 sm:p-6">
-                {/* Experience Tab */}
+                {/* Experience Tab */}{" "}
                 <TabsContent
                   value="experience"
-                  className="mt-0 animate-fade-in"
+                  className="mt-0 animate-fade-in section-experience rounded-lg p-6"
                   data-section="experience"
                 >
                   <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">
@@ -178,10 +178,10 @@ const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
                     ))}
                   </div>
                 </TabsContent>{" "}
-                {/* Skills Tab */}
+                {/* Skills Tab */}{" "}
                 <TabsContent
                   value="skills"
-                  className="mt-0 animate-fade-in"
+                  className="mt-0 animate-fade-in section-skills rounded-lg p-6"
                   data-section="skills"
                 >
                   <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">
@@ -189,10 +189,10 @@ const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
                   </h2>
                   <SkillsSection skills={data.skills} />
                 </TabsContent>
-                {/* Education Tab */}
+                {/* Education Tab */}{" "}
                 <TabsContent
                   value="education"
-                  className="mt-0 animate-fade-in"
+                  className="mt-0 animate-fade-in section-experience rounded-lg p-6"
                   data-section="education"
                 >
                   <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">
@@ -224,10 +224,10 @@ const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
                     <p className="text-muted-foreground">No certifications added yet.</p>
                   )}
                 </TabsContent> */}
-                {/* Projects Tab */}
+                {/* Projects Tab */}{" "}
                 <TabsContent
                   value="projects"
-                  className="mt-0 animate-fade-in"
+                  className="mt-0 animate-fade-in section-experience rounded-lg p-6"
                   data-section="projects"
                 >
                   <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">
@@ -246,10 +246,10 @@ const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
                   </h2>
                   <GitHubProjects username={githubUsername} count={6} />
                 </TabsContent>{" "}
-                {/* Contact Tab */}
+                {/* Contact Tab */}{" "}
                 <TabsContent
                   value="contact"
-                  className="mt-0 animate-fade-in"
+                  className="mt-0 animate-fade-in section-contact rounded-lg p-6"
                   data-section="contact"
                 >
                   <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">
