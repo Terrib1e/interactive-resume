@@ -1,11 +1,11 @@
 // src/components/contact/ContactMethods.tsx
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Github, Linkedin, Copy } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { toast } from '@/hooks/use-toast';
-import type { Profile } from '@/types/resume';
+import { motion } from "framer-motion";
+import { Mail, Phone, MapPin, Github, Linkedin, Copy } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "@/hooks/use-toast";
+import type { Profile } from "@/types/resume";
 
 interface ContactMethodsProps {
   profile: Profile;
@@ -16,65 +16,81 @@ export function ContactMethods({ profile }: ContactMethodsProps) {
     try {
       await navigator.clipboard.writeText(text);
       toast({
-        title: 'Copied!',
+        title: "Copied!",
         description: `${type} copied to clipboard`,
-        variant: 'default',
+        variant: "default",
       });
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
       toast({
-        title: 'Copy failed',
-        description: 'Please copy manually',
-        variant: 'destructive',
+        title: "Copy failed",
+        description: "Please copy manually",
+        variant: "destructive",
       });
     }
+  };
+
+  const getButtonText = (label: string) => {
+    if (label === "Email") return "Send";
+    if (label === "Phone") return "Call";
+    return "View";
   };
 
   const contactMethods = [
     {
       icon: Mail,
-      label: 'Email',
+      label: "Email",
       value: profile.email,
       href: `mailto:${profile.email}`,
       copyText: profile.email,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+      color: "text-blue-600",
+      bgColor: "bg-blue-50 dark:bg-blue-900/20",
     },
     {
       icon: Phone,
-      label: 'Phone',
+      label: "Phone",
       value: profile.phone,
       href: `tel:${profile.phone}`,
       copyText: profile.phone,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
+      color: "text-green-600",
+      bgColor: "bg-green-50 dark:bg-green-900/20",
     },
     {
       icon: MapPin,
-      label: 'Location',
+      label: "Location",
       value: profile.location,
-      href: `https://maps.google.com/?q=${encodeURIComponent(profile.location)}`,
+      href: `https://maps.google.com/?q=${encodeURIComponent(
+        profile.location
+      )}`,
       copyText: profile.location,
-      color: 'text-red-600',
-      bgColor: 'bg-red-50 dark:bg-red-900/20',
+      color: "text-red-600",
+      bgColor: "bg-red-50 dark:bg-red-900/20",
     },
   ];
 
   const socialLinks = [
-    ...(profile.links.github ? [{
-      icon: Github,
-      label: 'GitHub',
-      value: `@${profile.links.github}`,
-      href: `https://github.com/${profile.links.github}`,
-      color: 'text-gray-700 dark:text-gray-300',
-    }] : []),
-    ...(profile.links.linkedin ? [{
-      icon: Linkedin,
-      label: 'LinkedIn',
-      value: profile.links.linkedin,
-      href: `https://linkedin.com/in/${profile.links.linkedin}`,
-      color: 'text-blue-700',
-    }] : []),
+    ...(profile.links.github
+      ? [
+          {
+            icon: Github,
+            label: "GitHub",
+            value: `@${profile.links.github}`,
+            href: `https://github.com/${profile.links.github}`,
+            color: "text-gray-700 dark:text-gray-300",
+          },
+        ]
+      : []),
+    ...(profile.links.linkedin
+      ? [
+          {
+            icon: Linkedin,
+            label: "LinkedIn",
+            value: profile.links.linkedin,
+            href: `https://linkedin.com/in/${profile.links.linkedin}`,
+            color: "text-blue-700",
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -98,32 +114,37 @@ export function ContactMethods({ profile }: ContactMethodsProps) {
                   <method.icon className={`w-5 h-5 ${method.color}`} />
                   <div>
                     <div className="font-medium text-sm">{method.label}</div>
-                    <div className="text-sm text-muted-foreground">{method.value}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {method.value}
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => copyToClipboard(method.copyText, method.label)}
+                    onClick={() =>
+                      copyToClipboard(method.copyText, method.label)
+                    }
                     className="h-8 w-8 p-0"
                     title={`Copy ${method.label}`}
                   >
                     <Copy className="w-3 h-3" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    asChild
-                    className="h-8"
-                  >
-                    <a 
+                  </Button>{" "}
+                  <Button variant="outline" size="sm" asChild className="h-8">
+                    {" "}
+                    <a
                       href={method.href}
-                      target={method.label === 'Location' ? '_blank' : undefined}
-                      rel={method.label === 'Location' ? 'noopener noreferrer' : undefined}
+                      target={
+                        method.label === "Location" ? "_blank" : undefined
+                      }
+                      rel={
+                        method.label === "Location"
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
                     >
-                      {method.label === 'Email' ? 'Send' : 
-                       method.label === 'Phone' ? 'Call' : 'View'}
+                      {getButtonText(method.label)}
                     </a>
                   </Button>
                 </div>
@@ -153,7 +174,7 @@ export function ContactMethods({ profile }: ContactMethodsProps) {
                     className="w-full justify-start h-auto p-4"
                     asChild
                   >
-                    <a 
+                    <a
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -162,7 +183,9 @@ export function ContactMethods({ profile }: ContactMethodsProps) {
                       <social.icon className={`w-5 h-5 ${social.color}`} />
                       <div className="text-left">
                         <div className="font-medium">{social.label}</div>
-                        <div className="text-sm text-muted-foreground">{social.value}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {social.value}
+                        </div>
                       </div>
                     </a>
                   </Button>

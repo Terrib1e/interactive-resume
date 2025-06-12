@@ -1,7 +1,6 @@
 // src/components/resume/SkillsMatrix.tsx
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { Badge } from "@/components/ui/badge";
 import type { Skills } from "@/types/resume";
 
 interface SkillsMatrixProps {

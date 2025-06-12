@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { ProjectGallery } from "./ProjectGallery";
 import { ContactForm } from "../contact/ContactForm";
+import { ContactMethods } from "../contact/ContactMethods";
 import { Education } from "./Education";
 import { HeroSection } from "./HeroSection";
 import { FadeIn } from "../animations/fade-in";
@@ -244,7 +245,7 @@ const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
                     GitHub Repositories
                   </h2>
                   <GitHubProjects username={githubUsername} count={6} />
-                </TabsContent>
+                </TabsContent>{" "}
                 {/* Contact Tab */}
                 <TabsContent
                   value="contact"
@@ -254,9 +255,26 @@ const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
                   <h2 className="text-2xl font-bold mb-6 text-primary-700 dark:text-blue-300">
                     Get In Touch
                   </h2>
-                  <div id="contact" className="max-w-2xl mx-auto">
-                    <ContactForm />
-                  </div>{" "}
+                  <div id="contact" className="space-y-8">
+                    {/* Contact Methods */}
+                    <div className="max-w-4xl mx-auto">
+                      <ContactMethods profile={data.profile} />
+                    </div>
+
+                    {/* Contact Form */}
+                    <div className="max-w-2xl mx-auto">
+                      <div className="text-center mb-6">
+                        <h3 className="text-lg font-semibold mb-2">
+                          Send me a message
+                        </h3>
+                        <p className="text-muted-foreground text-sm">
+                          Fill out the form below and I'll get back to you as
+                          soon as possible.
+                        </p>
+                      </div>
+                      <ContactForm />
+                    </div>
+                  </div>
                 </TabsContent>
               </div>
             </Tabs>

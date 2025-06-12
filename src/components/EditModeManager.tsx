@@ -1,11 +1,11 @@
 // src/components/EditModeManager.tsx (simplified)
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import Resume from '@/components/resume/Resume';
-import { SplitViewEditor } from '@/components/editor/SplitViewEditor';
-import { Edit, Eye, Save, Download, Trash2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import Resume from "@/components/resume/Resume";
+import { SplitViewEditor } from "@/components/editor/SplitViewEditor";
+import { Edit, Eye, Save, Download, Trash2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,25 +16,33 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { ResumeData } from '@/types/resume';
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import type { ResumeData } from "@/types/resume";
 
 interface EditModeManagerProps {
   initialData: ResumeData;
-
 }
 
 // Define the edit modes
-type EditMode = 'preview' | 'split';
+type EditMode = "preview" | "split";
 
 export function EditModeManager({ initialData }: EditModeManagerProps) {
-  const [editMode, setEditMode] = useState<EditMode>('preview');
+  const [editMode, setEditMode] = useState<EditMode>("preview");
   const [resumeData, setResumeData] = useState<ResumeData>(initialData);
+  const [activeTab, setActiveTab] = useState<string>("experience");
   const { toast } = useToast();
 
   // Local storage integration
-  const [storedData, setStoredData, removeStoredData] = useLocalStorage<ResumeData>('resume-data', initialData);
+  const [storedData, setStoredData, removeStoredData] =
+    useLocalStorage<ResumeData>("resume-data", initialData);
 
   // Load data from localStorage on mount
   useEffect(() => {
@@ -46,11 +54,11 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
   const handleSave = (newData: ResumeData) => {
     setResumeData(newData);
     setStoredData(newData);
-    setEditMode('preview');
+    setEditMode("preview");
 
     toast({
-      title: 'Changes saved',
-      description: 'Your resume has been updated and saved to local storage.',
+      title: "Changes saved",
+      description: "Your resume has been updated and saved to local storage.",
     });
   };
 
@@ -59,8 +67,8 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
     setStoredData(initialData);
 
     toast({
-      title: 'Reset complete',
-      description: 'Your resume has been reset to the default template.',
+      title: "Reset complete",
+      description: "Your resume has been reset to the default template.",
     });
   };
 
@@ -69,25 +77,27 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
     setResumeData(initialData);
 
     toast({
-      title: 'Data cleared',
-      description: 'Your resume data has been cleared from local storage.',
+      title: "Data cleared",
+      description: "Your resume data has been cleared from local storage.",
     });
   };
 
   // Export resume data as JSON
   const exportJSON = () => {
     const dataStr = JSON.stringify(resumeData, null, 2);
-    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
-    const exportFileDefaultName = 'resume-data.json';
+    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(
+      dataStr
+    )}`;
+    const exportFileDefaultName = "resume-data.json";
 
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
 
     toast({
-      title: 'JSON exported',
-      description: 'Your resume data has been exported as a JSON file.',
+      title: "JSON exported",
+      description: "Your resume data has been exported as a JSON file.",
     });
   };
 
@@ -99,26 +109,30 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const importedData = JSON.parse(e.target?.result as string) as ResumeData;
+        const importedData = JSON.parse(
+          e.target?.result as string
+        ) as ResumeData;
         setResumeData(importedData);
         setStoredData(importedData);
 
         toast({
-          title: 'Import successful',
-          description: 'Your resume data has been imported and saved.',
+          title: "Import successful",
+          description: "Your resume data has been imported and saved.",
         });
       } catch (error) {
+        console.error("Import failed:", error);
         toast({
-          variant: 'destructive',
-          title: 'Import failed',
-          description: 'There was an error importing your resume data. Please check the file format.',
+          variant: "destructive",
+          title: "Import failed",
+          description:
+            "There was an error importing your resume data. Please check the file format.",
         });
       }
     };
     reader.readAsText(file);
 
     // Reset the input
-    event.target.value = '';
+    event.target.value = "";
   };
 
   return (
@@ -140,10 +154,18 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
               <Download className="w-4 h-4 mr-2" />
               Export JSON
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => document.getElementById('json-upload')?.click()}>
+            <DropdownMenuItem
+              onClick={() => document.getElementById("json-upload")?.click()}
+            >
               <Save className="w-4 h-4 mr-2" />
               Import JSON
-              <input id="json-upload" type="file" accept=".json" onChange={importJSON} className="hidden" />
+              <input
+                id="json-upload"
+                type="file"
+                accept=".json"
+                onChange={importJSON}
+                className="hidden"
+              />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <AlertDialog>
@@ -156,11 +178,16 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>This will reset your resume to the default template. All your custom data will be lost.</AlertDialogDescription>
+                  <AlertDialogDescription>
+                    This will reset your resume to the default template. All
+                    your custom data will be lost.
+                  </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleResetToDefault}>Reset</AlertDialogAction>
+                  <AlertDialogAction onClick={handleResetToDefault}>
+                    Reset
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -174,11 +201,16 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>This will permanently remove your resume data from local storage. This action cannot be undone.</AlertDialogDescription>
+                  <AlertDialogDescription>
+                    This will permanently remove your resume data from local
+                    storage. This action cannot be undone.
+                  </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleClearData}>Delete</AlertDialogAction>
+                  <AlertDialogAction onClick={handleClearData}>
+                    Delete
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -186,8 +218,14 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
         </DropdownMenu>
 
         {/* Edit/Preview Mode Toggle */}
-        <Button variant="outline" size="sm" onClick={() => setEditMode(editMode === 'preview' ? 'split' : 'preview')}>
-          {editMode === 'preview' ? (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            setEditMode(editMode === "preview" ? "split" : "preview")
+          }
+        >
+          {editMode === "preview" ? (
             <>
               <Edit className="w-4 h-4 mr-2" />
               Edit
@@ -199,14 +237,19 @@ export function EditModeManager({ initialData }: EditModeManagerProps) {
             </>
           )}
         </Button>
-      </div>
-
+      </div>{" "}
       {/* Main Content */}
-      {editMode === 'split' ? <SplitViewEditor initialData={resumeData} onSave={handleSave} /> : <Resume data={resumeData} />}
-
+      {editMode === "split" ? (
+        <SplitViewEditor initialData={resumeData} onSave={handleSave} />
+      ) : (
+        <Resume
+          data={resumeData}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      )}
       {/* Only show ExportButton in preview mode
       {editMode === 'preview' && <ExportButton />} */}
     </div>
   );
-
 }

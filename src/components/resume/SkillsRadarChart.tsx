@@ -57,10 +57,7 @@ export function SkillsRadarChart({
     };
   });
 
-  const backgroundPath =
-    backgroundPoints
-      .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
-      .join(" ") + " Z";
+  // Removed unused variable 'backgroundPath'
 
   const dataPath =
     dataPoints
