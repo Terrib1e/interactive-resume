@@ -104,13 +104,10 @@
 }
 
 @layer components {
-  /* Improved card styling with subtle backgrounds */
+
+  /* Improved card styling */
   .card {
     @apply transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg;
-  }
-
-  .card-enhanced {
-    @apply bg-gradient-to-br from-white to-primary-50/30 border border-primary-100/50 transition-all duration-300 hover:shadow-card-hover hover:border-primary-200/70;
   }
 
   /* Enhanced button styling */
@@ -118,42 +115,9 @@
     @apply bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:shadow-primary/20 transition-all;
   }
 
-  /* Badge styling with accent colors */
+  /* Badge styling */
   .badge-skill {
-    @apply text-xs font-medium px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20;
-  }
-
-  .badge-frontend {
-    @apply bg-emerald-100 text-emerald-700 border-emerald-200;
-  }
-
-  .badge-backend {
-    @apply bg-violet-100 text-violet-700 border-violet-200;
-  }
-
-  .badge-tools {
-    @apply bg-amber-100 text-amber-700 border-amber-200;
-  }
-
-  .badge-soft {
-    @apply bg-blue-100 text-blue-700 border-blue-200;
-  }
-
-  /* Section backgrounds */
-  .section-hero {
-    @apply bg-gradient-to-br from-primary-50/50 via-white to-emerald-50/30;
-  }
-
-  .section-skills {
-    @apply bg-gradient-to-br from-violet-50/30 via-white to-primary-50/30;
-  }
-
-  .section-experience {
-    @apply bg-gradient-to-br from-emerald-50/30 via-white to-amber-50/30;
-  }
-
-  .section-contact {
-    @apply bg-gradient-to-br from-amber-50/30 via-white to-primary-50/30;
+    @apply text-xs font-medium px-2.5 py-0.5 rounded-full bg-primary/10 text-primary-foreground;
   }
 }
 
