@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       return new Response(JSON.stringify({
         success: false,
         message: 'Invalid form data',
-        errors: error.errors
+        errors: error.issues
       }), {
         status: 400,
         headers: {

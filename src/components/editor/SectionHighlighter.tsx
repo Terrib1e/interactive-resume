@@ -3,8 +3,8 @@ import { useEffect, useRef } from 'react'
 
 interface SectionHighlighterProps {
   activeSection: string | null
-  previewRef: React.RefObject<HTMLDivElement>
-  editorRef: React.RefObject<HTMLDivElement>
+  previewRef: React.RefObject<HTMLDivElement | null>
+  editorRef: React.RefObject<HTMLDivElement | null>
 }
 
 export function SectionHighlighter({ activeSection, previewRef, editorRef }: SectionHighlighterProps) {

@@ -15,8 +15,6 @@ import {
   MessageSquare,
   FolderGit2,
   Github,
-  Sun,
-  Moon,
 } from "lucide-react";
 import { ProjectGallery } from "./ProjectGallery";
 import { ContactForm } from "../contact/ContactForm";
@@ -25,8 +23,6 @@ import { Education } from "./Education";
 import { HeroSection } from "./HeroSection";
 import { FadeIn } from "../animations/fade-in";
 import { Experience } from "./Experience";
-import { useTheme } from "@/components/theme/ThemeProvider";
-import { Button } from "@/components/ui/button";
 import type { ResumeData } from "@/types/resume";
 import { GitHubProjects } from "./GithubProjects";
 import { SkillsSection } from "./SkillsSection";
@@ -41,32 +37,11 @@ interface ResumeProps {
 const githubUsername = import.meta.env.GITHUB_USERNAME ?? "terrib1e";
 
 const Resume: React.FC<ResumeProps> = ({ data, activeTab, onTabChange }) => {
-  const { theme, setTheme } = useTheme();
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
   return (
     <div
       className="min-h-screen bg-background dark:bg-dark-bg"
       id="resume-main"
     >
-      {/* Theme Toggle */}
-      <Button
-        variant="outline"
-        size="icon"
-        className="fixed top-4 right-4 z-50 rounded-full w-10 h-10 bg-background/80 backdrop-blur-sm"
-        onClick={toggleTheme}
-        aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-      >
-        {theme === "dark" ? (
-          <Sun className="h-4 w-4" />
-        ) : (
-          <Moon className="h-4 w-4" />
-        )}
-        <span className="sr-only">Toggle theme</span>
-      </Button>
-
       {/* Hero Section */}
       <header>
         <HeroSection
